@@ -24,8 +24,8 @@ namespace WpfTest
         private const string COLOR_DOWN = "#77000000";
         private const string BACKGROUD_COLOR_BUTTON = "#00000000";
         private const int LINE_STROCK_THICKNESS = 1;
-        private const int WIDTH_CELL_PATTERN = 15;
-        private const int HEIGHT_CELL_PATTERN = 15;
+        private const int HEIGHT_CELL_PATTERN = 25;
+        private const int WIDTH_CELL_PATTERN = 100;
 
         public MainWindow()
         {
@@ -43,7 +43,13 @@ namespace WpfTest
             btnUpload.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnPlay.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
 
+            initCombobox();
+        }
 
+        private void initCombobox()
+        {
+            foreach (string key in Patterns.PATTERNS.Keys)
+                cbxPattern.Items.Add(key);
         }
 
         private static Brush BrushFromString(string color)
@@ -64,6 +70,11 @@ namespace WpfTest
             if (int.TryParse(((TextBox)sender).Text, out val))
                 if (val >= sliderDelayGeneration.Minimum && val <= sliderDelayGeneration.Maximum)
                     sliderDelayGeneration.Value = val;
+        }
+
+        private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show(((ComboBox)sender).SelectedItem.ToString(), "Hekki");
         }
 
         private void btnPlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -125,29 +136,28 @@ namespace WpfTest
             double margeLeftRight = imgPattern.ActualWidth - (int)nbCols * (WIDTH_CELL_PATTERN + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS;
             margeLeftRight /= 2;
 
-            for (int i = 0; i < nbCols; ++i)
+            for (int i = 0; i <= (int)nbCols; ++i)
             {
                 Line line = new Line();
                 line.Stroke = BrushFromString(COLOR_UP);
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
-                line.X1 = margeLeftRight + i * HEIGHT_CELL_PATTERN + (i+1)*LINE_STROCK_THICKNESS;
+                line.X1 = margeLeftRight + i * WIDTH_CELL_PATTERN + (i + 1) * LINE_STROCK_THICKNESS;
                 line.X2 = line.X1;
                 line.Y1 = margeTopBottom + LINE_STROCK_THICKNESS; ;
                 line.Y2 = imgPattern.ActualHeight - margeTopBottom;
                 imgPattern.Children.Add(line);
             }
-            for (int i = 0; i < nbRows; ++i)
+            for (int i = 0; i <= (int)nbRows; ++i)
             {
                 Line line = new Line();
                 line.Stroke = BrushFromString(COLOR_UP);
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
                 line.X1 = margeLeftRight + LINE_STROCK_THICKNESS;
                 line.X2 = imgPattern.ActualWidth - margeLeftRight;
-                line.Y1 = margeTopBottom + i * WIDTH_CELL_PATTERN + (i+1)*LINE_STROCK_THICKNESS;
+                line.Y1 = margeTopBottom + i * HEIGHT_CELL_PATTERN + (i+1)*LINE_STROCK_THICKNESS;
                 line.Y2 = line.Y1;
                 imgPattern.Children.Add(line);
             }
         }
-
     }
 }
