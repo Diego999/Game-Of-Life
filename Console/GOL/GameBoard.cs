@@ -9,7 +9,7 @@ namespace GOL
     class GameBoard
     {
         public enum State {Alive, Emerging, Dying, Empty, Dead};
-        private static readonly Dictionary<State, string> STATE_MATCH;
+        public static readonly Dictionary<State, string> STATE_MATCH;
 
         private int x;
         private int y;
@@ -25,25 +25,17 @@ namespace GOL
             STATE_MATCH.Add(State.Dead, "O");
         }
 
-        public static bool IsCellDead(State s)
-        {
-            return s == State.Empty || s == State.Dead ||s == State.Dying;
-        }
-
-        public static bool IsCellAlive(State s)
-        {
-            return s == State.Alive || s == State.Emerging;
-        }
-
         public GameBoard(int x, int y)
         {
+            if (x < 10 || y < 10)
+                throw new Exception("One or more dimensions are smaller than 10");
+
             this.x = x;
             this.y = y;
             gameBoard = new State[x, y];
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
                     gameBoard[i, j] = State.Empty;
-            gameBoard[2, 0] = gameBoard[2, 1] = gameBoard[2, 2] = gameBoard[1, 2] = gameBoard[0, 1] = State.Alive;
         }
 
         public State this[int k1, int k2]
@@ -75,26 +67,9 @@ namespace GOL
                 k1 -= x;
             if (k2 >= y)
                 k2 -= y;
-        }
 
-        public void draw()
-        {
-            for (int j = 0; j <= gameBoard.GetUpperBound(1)+2; ++j)
-                Console.Write("-");
-            Console.WriteLine();
-            for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
-            {
-                Console.Write("|");
-                for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                {
-                    Console.Write(STATE_MATCH[gameBoard[i, j]]);
-                }
-                Console.Write("|");
-                Console.WriteLine();
-            }
-            for (int j = 0; j <= gameBoard.GetUpperBound(1)+2; ++j)
-                Console.Write("-");
-            Console.WriteLine();
+            if (k1 >= x || k2 >= y)
+                throw new IndexOutOfRangeException();
         }
     }
 }
