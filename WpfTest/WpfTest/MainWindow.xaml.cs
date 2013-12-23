@@ -20,28 +20,53 @@ namespace WpfTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string COLOR_UP = "#FF000000";
+        private const string COLOR_UP = "#FF555555";
         private const string COLOR_DOWN = "#77000000";
         private const string BACKGROUD_COLOR_BUTTON = "#00000000";
+        private const string BACKGROUND_GENERAL = "#FF222222";
+        private const string BACKGROUND_GAMEBOARD = "#FF111111";
         private const int LINE_STROCK_THICKNESS = 1;
+
+        private bool isInPause;
 
         public MainWindow()
         {
             InitializeComponent();
+            isInPause = true;
 
             pathBtnClean.Fill = BrushFromString(COLOR_UP);
             pathBtnNextGeneration.Fill = BrushFromString(COLOR_UP);
             pathBtnSave.Fill = BrushFromString(COLOR_UP);
             pathBtnUpload.Fill = BrushFromString(COLOR_UP);
             pathBtnPlay.Fill = BrushFromString(COLOR_UP);
+            pathBtnPause.Fill = BrushFromString(COLOR_UP);
 
             btnClean.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnNextGeneration.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnSave.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnUpload.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnPlay.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
+            btnPause.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
 
+            btnPause.Visibility = Visibility.Hidden;
+
+            this.Background = BrushFromString(BACKGROUND_GENERAL);
+            cvsGameBoard.Background = BrushFromString(BACKGROUND_GAMEBOARD);
+            lblDelayBetweenGeneration.Foreground = BrushFromString(COLOR_UP);
+            tbxDelayGeneration.Foreground = BrushFromString(COLOR_UP);
             initCombobox();
+        }
+
+        private void drawPlay()
+        {
+            btnPause.Visibility = Visibility.Hidden;
+            btnPlay.Visibility = Visibility.Visible;
+        }
+
+        private void drawPause()
+        {
+            btnPause.Visibility = Visibility.Visible;
+            btnPlay.Visibility = Visibility.Hidden;
         }
 
         private void initCombobox()
@@ -72,7 +97,11 @@ namespace WpfTest
 
         private void btnPlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            pathBtnPlay.Fill = BrushFromString(COLOR_DOWN);
+            if (isInPause)
+                pathBtnPlay.Fill = BrushFromString(COLOR_DOWN);
+            else
+                pathBtnPause.Fill = BrushFromString(COLOR_DOWN);
+            isInPause = !isInPause;
         }
 
         private void btnNextGeneration_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -97,7 +126,16 @@ namespace WpfTest
 
         private void btnPlay_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            pathBtnPlay.Fill = BrushFromString(COLOR_UP);
+            if (isInPause)
+            {
+                pathBtnPlay.Fill = BrushFromString(COLOR_UP);
+                drawPlay();
+            }
+            else
+            {
+                pathBtnPause.Fill = BrushFromString(COLOR_UP);
+                drawPause();
+            }
         }
 
         private void btnNextGeneration_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
