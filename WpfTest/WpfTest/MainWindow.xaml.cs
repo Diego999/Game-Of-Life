@@ -32,7 +32,7 @@ namespace WpfTest
         public MainWindow()
         {
             InitializeComponent();
-            isInPause = true;
+            isInPause = true;    
 
             pathBtnClean.Fill = BrushFromString(COLOR_UP);
             pathBtnNextGeneration.Fill = BrushFromString(COLOR_UP);
