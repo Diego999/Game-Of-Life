@@ -8,7 +8,7 @@ namespace GOL
 {
     class GameBoard
     {
-        public enum State {Alive, Emerging, Dying, Dead};
+        public enum State {Alive, Emerging, Dying, Empty, Dead};
         private static readonly Dictionary<State, string> STATE_MATCH;
 
         private int x;
@@ -19,7 +19,20 @@ namespace GOL
         {
             STATE_MATCH = new Dictionary<State, string>();
             STATE_MATCH.Add(State.Alive, "X");
-            STATE_MATCH.Add(State.Dead, " ");
+            STATE_MATCH.Add(State.Emerging, "x");
+            STATE_MATCH.Add(State.Empty, " ");
+            STATE_MATCH.Add(State.Dying, "o");
+            STATE_MATCH.Add(State.Dead, "O");
+        }
+
+        public static bool IsCellDead(State s)
+        {
+            return s == State.Empty || s == State.Dead ||s == State.Dying;
+        }
+
+        public static bool IsCellAlive(State s)
+        {
+            return s == State.Alive || s == State.Emerging;
         }
 
         public GameBoard(int x, int y)
@@ -29,8 +42,8 @@ namespace GOL
             gameBoard = new State[x, y];
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                    gameBoard[i, j] = State.Dead;
-            gameBoard[12, 15] = gameBoard[12, 14] = gameBoard[12, 16] = gameBoard[11, 16] = gameBoard[10, 15] = State.Alive;
+                    gameBoard[i, j] = State.Empty;
+            gameBoard[2, 0] = gameBoard[2, 1] = gameBoard[2, 2] = gameBoard[1, 2] = gameBoard[0, 1] = State.Alive;
         }
 
         public State this[int k1, int k2]

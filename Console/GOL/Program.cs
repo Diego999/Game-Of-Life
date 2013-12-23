@@ -26,17 +26,22 @@ namespace GOL
                         int neighbors = 0;
                         for (int ii = -1; ii <= 1; ++ii)
                             for (int jj = -1; jj <= 1; ++jj)
-                                if(gameBoard1[i+ii, j+jj] == GameBoard.State.Alive)
+                                if(GameBoard.IsCellAlive(gameBoard1[i+ii, j+jj]))
                                     ++neighbors;
-                        if (gameBoard1[i, j] == GameBoard.State.Alive)
+                        if (GameBoard.IsCellAlive(gameBoard1[i, j]))
                             --neighbors;
 
-                        if (gameBoard1[i, j] == GameBoard.State.Alive && (neighbors < 2 || neighbors > 3))
+                        if (GameBoard.IsCellAlive(gameBoard1[i, j]) && (neighbors < 2 || neighbors > 3))
+                            gameBoard2[i, j] = GameBoard.State.Dying;
+                        else if (GameBoard.IsCellDead(gameBoard1[i, j]) && neighbors == 3)
+                            gameBoard2[i, j] = GameBoard.State.Emerging;
+                        else if (gameBoard1[i, j] == GameBoard.State.Dying)
                             gameBoard2[i, j] = GameBoard.State.Dead;
-                        else if (gameBoard1[i, j] == GameBoard.State.Dead && neighbors == 3 || gameBoard1[i, j] == GameBoard.State.Alive && (neighbors == 2 || neighbors == 3))
+                        else if (gameBoard1[i, j] == GameBoard.State.Emerging)
                             gameBoard2[i, j] = GameBoard.State.Alive;
                         else
-                            gameBoard2[i, j] = GameBoard.State.Dead;
+                            gameBoard2[i, j] = gameBoard1[i, j];
+
                     }
                 GameBoard temp = gameBoard1;
                 gameBoard1 = gameBoard2;
