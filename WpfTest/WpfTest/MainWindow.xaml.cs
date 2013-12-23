@@ -24,8 +24,6 @@ namespace WpfTest
         private const string COLOR_DOWN = "#77000000";
         private const string BACKGROUD_COLOR_BUTTON = "#00000000";
         private const int LINE_STROCK_THICKNESS = 1;
-        private const int HEIGHT_CELL_PATTERN = 25;
-        private const int WIDTH_CELL_PATTERN = 100;
 
         public MainWindow()
         {
@@ -70,11 +68,6 @@ namespace WpfTest
             if (int.TryParse(((TextBox)sender).Text, out val))
                 if (val >= sliderDelayGeneration.Minimum && val <= sliderDelayGeneration.Maximum)
                     sliderDelayGeneration.Value = val;
-        }
-
-        private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MessageBox.Show(((ComboBox)sender).SelectedItem.ToString(), "Hekki");
         }
 
         private void btnPlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -129,19 +122,33 @@ namespace WpfTest
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            double nbRows = (imgPattern.ActualHeight-LINE_STROCK_THICKNESS)/(HEIGHT_CELL_PATTERN+LINE_STROCK_THICKNESS);
-            double margeTopBottom = imgPattern.ActualHeight - (int)nbRows * (HEIGHT_CELL_PATTERN + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS;
-            margeTopBottom /= 2;
-            double nbCols = (imgPattern.ActualWidth - LINE_STROCK_THICKNESS) / (WIDTH_CELL_PATTERN + LINE_STROCK_THICKNESS);
-            double margeLeftRight = imgPattern.ActualWidth - (int)nbCols * (WIDTH_CELL_PATTERN + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS;
-            margeLeftRight /= 2;
+            cbxPattern.SelectedItem = Patterns.PATTERNS.Keys.First();
+            cbxPattern_SelectionChanged(cbxPattern, null);
+        }
+
+        private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            imgPattern.Children.Clear();
+            string t = ((ComboBox)sender).SelectedItem.ToString();
+            drawPattern(Patterns.PATTERNS[((ComboBox)sender).SelectedItem.ToString()]);
+        }
+
+        private void drawPattern(PatternRepresentation pattern)
+        {
+            double nbCols = pattern.Col;
+            double nbRows = pattern.Row;
+            double width = imgPattern.ActualWidth / nbCols-2;
+            double height = imgPattern.ActualHeight / nbRows-2;
+
+            double margeTopBottom = (imgPattern.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+            double margeLeftRight = (imgPattern.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
 
             for (int i = 0; i <= (int)nbCols; ++i)
             {
                 Line line = new Line();
                 line.Stroke = BrushFromString(COLOR_UP);
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
-                line.X1 = margeLeftRight + i * WIDTH_CELL_PATTERN + (i + 1) * LINE_STROCK_THICKNESS;
+                line.X1 = margeLeftRight + i * width + (i + 1) * LINE_STROCK_THICKNESS;
                 line.X2 = line.X1;
                 line.Y1 = margeTopBottom + LINE_STROCK_THICKNESS; ;
                 line.Y2 = imgPattern.ActualHeight - margeTopBottom;
@@ -154,10 +161,26 @@ namespace WpfTest
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
                 line.X1 = margeLeftRight + LINE_STROCK_THICKNESS;
                 line.X2 = imgPattern.ActualWidth - margeLeftRight;
-                line.Y1 = margeTopBottom + i * HEIGHT_CELL_PATTERN + (i+1)*LINE_STROCK_THICKNESS;
+                line.Y1 = margeTopBottom + i * height + (i + 1) * LINE_STROCK_THICKNESS;
                 line.Y2 = line.Y1;
                 imgPattern.Children.Add(line);
             }
+
+            for(int i = 0; i < pattern.Row; ++i)
+                for(int j = 0; j < pattern.Col; ++j)
+                {
+                    if (pattern[i, j] == PatternRepresentation.ALIVE)
+                    {
+                        Rectangle rectangle = new Rectangle();
+                        rectangle.Fill = BrushFromString(COLOR_DOWN);
+                        rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
+                        rectangle.Width = width;
+                        rectangle.Height = height;
+                        Canvas.SetTop(rectangle, (int)(margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height));
+                        Canvas.SetLeft(rectangle, (int)(margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width));
+                        imgPattern.Children.Add(rectangle);
+                    }
+                }
         }
     }
 }

@@ -46,5 +46,11 @@ namespace WpfTest
         {
             return k1 >= 0 && k1 < rows && k2 >= 0 && k2 < cols;
         }
+
+        public int Row { get { return rows; } }
+
+        public int Col { get { return cols; } }
+
+        public String[,] Pattern { get {return pattern;}}
     }
 }
