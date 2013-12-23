@@ -80,13 +80,58 @@
                         ms</Label>
                 </Grid>
             </Grid>
-            <Label Grid.Column="1" Grid.Row="0">Test</Label>
+
+            <Grid Grid.Column="1" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="90" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+
+                <Label VerticalAlignment="Center" Name="lblLegend1" FontWeight="Bold" Grid.Column="0" Grid.Row="0">
+                    <TextBlock>
+                    Current population alive :<LineBreak/>
+                    Current population emerging :<LineBreak/>
+                    Current population dying :<LineBreak/>
+                    Current population dead :<LineBreak/>
+                    </TextBlock>
+                </Label>
+                <Label VerticalAlignment="Center" Name="lblValue1" Grid.Column="1" Grid.Row="0">
+                    <TextBlock>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    </TextBlock>
+                </Label>
+                <Label VerticalAlignment="Center" Name="lblLegend2" FontWeight="Bold" Grid.Column="2" Grid.Row="0">
+                    <TextBlock>
+                    Generation :<LineBreak/>
+                    Total population emerged :<LineBreak/>
+                    Total population dying :<LineBreak/>
+                    Total population :<LineBreak/>
+                    </TextBlock>
+                </Label>
+                <Label VerticalAlignment="Center" Name="lblValue2" Grid.Column="3" Grid.Row="0">
+                    <TextBlock>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    0<LineBreak/>
+                    </TextBlock>
+                </Label>
+            </Grid>
+            
             <Grid Grid.Column="2" Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="90" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="150" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <ComboBox Name="cbxPattern" SelectionChanged="cbxPattern_SelectionChanged" Grid.Column="0" Grid.Row="0" Width="100" Height="20"></ComboBox>
