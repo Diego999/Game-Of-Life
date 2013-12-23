@@ -54,6 +54,10 @@ namespace WpfTest
             cvsGameBoard.Background = BrushFromString(BACKGROUND_GAMEBOARD);
             lblDelayBetweenGeneration.Foreground = BrushFromString(COLOR_UP);
             tbxDelayGeneration.Foreground = BrushFromString(COLOR_UP);
+
+            cbxPattern.Background = Brushes.Transparent;
+            cbxPattern.Foreground = BrushFromString(COLOR_UP);
+            cbxPattern.Resources.Add(SystemColors.WindowBrushKey, Brushes.Transparent);
             initCombobox();
         }
 

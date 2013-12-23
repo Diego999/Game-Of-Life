@@ -93,7 +93,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label VerticalAlignment="Center" Name="lblLegend1" FontWeight="Bold" Grid.Column="0" Grid.Row="0">
-                    <TextBlock>
+                    <TextBlock FontWeight="Bold">
                     Current population alive :<LineBreak/>
                     Current population emerging :<LineBreak/>
                     Current population dying :<LineBreak/>
@@ -101,15 +101,15 @@
                     </TextBlock>
                 </Label>
                 <Label VerticalAlignment="Center" Name="lblValue1" Grid.Column="1" Grid.Row="0">
-                    <TextBlock>
+                    <TextBlock FontWeight="Bold">
                     0<LineBreak/>
                     0<LineBreak/>
                     0<LineBreak/>
                     0<LineBreak/>
                     </TextBlock>
                 </Label>
-                <Label VerticalAlignment="Center" Name="lblLegend2" FontWeight="Bold" Grid.Column="2" Grid.Row="0">
-                    <TextBlock>
+                <Label VerticalAlignment="Center" Name="lblLegend2" Grid.Column="2" Grid.Row="0">
+                    <TextBlock FontWeight="Bold">
                     Generation :<LineBreak/>
                     Total population emerged :<LineBreak/>
                     Total population dying :<LineBreak/>
@@ -117,7 +117,7 @@
                     </TextBlock>
                 </Label>
                 <Label VerticalAlignment="Center" Name="lblValue2" Grid.Column="3" Grid.Row="0">
-                    <TextBlock>
+                    <TextBlock FontWeight="Bold">
                     0<LineBreak/>
                     0<LineBreak/>
                     0<LineBreak/>
@@ -134,7 +134,7 @@
                     <ColumnDefinition Width="150" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Name="cbxPattern" SelectionChanged="cbxPattern_SelectionChanged" Grid.Column="0" Grid.Row="0" Width="100" Height="20"></ComboBox>
+                <ComboBox FontWeight="Bold" Padding="5 0 0 0" Name="cbxPattern" SelectionChanged="cbxPattern_SelectionChanged" Grid.Column="0" Grid.Row="0" Width="150" Height="20"></ComboBox>
                 <Canvas Name="imgPattern" Grid.Column="1" Grid.Row="0" Margin="0,0,0,10"/>
             </Grid>
         </Grid>
