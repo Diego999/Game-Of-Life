@@ -168,6 +168,7 @@ namespace WpfTest
         {
             cbxPattern.SelectedItem = Patterns.PATTERNS.Keys.First();
             cbxPattern_SelectionChanged(cbxPattern, null);
+            drawGameBoard();
         }
 
         private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,6 +176,19 @@ namespace WpfTest
             imgPattern.Children.Clear();
             string t = ((ComboBox)sender).SelectedItem.ToString();
             drawPattern(Patterns.PATTERNS[((ComboBox)sender).SelectedItem.ToString()]);
+        }
+
+        private void drawGameBoard()
+        {
+            double nbRows = 50;
+            double nbCols = 80;
+            double width = (cvsGameBoard.ActualWidth - nbCols * LINE_STROCK_THICKNESS) / nbCols - 0.025;
+            double height = (cvsGameBoard.ActualHeight - nbRows * LINE_STROCK_THICKNESS) / nbRows - 0.025;
+
+            double margeTopBottom = (cvsGameBoard.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+            double margeLeftRight = (cvsGameBoard.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+
+            drawGrid(cvsGameBoard, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
         }
 
         private void drawPattern(PatternRepresentation pattern)
@@ -187,6 +201,16 @@ namespace WpfTest
             double margeTopBottom = (imgPattern.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
             double margeLeftRight = (imgPattern.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
 
+            drawGrid(imgPattern, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
+
+            for (int i = 0; i < pattern.Row; ++i)
+                for (int j = 0; j < pattern.Col; ++j)
+                    if (pattern[i, j] == PatternRepresentation.ALIVE)
+                        drawCell(imgPattern, i, j, margeTopBottom, margeLeftRight, width, height);
+        }
+
+        private void drawGrid(Canvas canvas, double nbCols, double nbRows, double margeTopBottom, double margeLeftRight, double width, double height)
+        {
             for (int i = 0; i <= (int)nbCols; ++i)
             {
                 Line line = new Line();
@@ -195,8 +219,8 @@ namespace WpfTest
                 line.X1 = margeLeftRight + i * width + (i + 1) * LINE_STROCK_THICKNESS;
                 line.X2 = line.X1;
                 line.Y1 = margeTopBottom + LINE_STROCK_THICKNESS; ;
-                line.Y2 = imgPattern.ActualHeight - margeTopBottom;
-                imgPattern.Children.Add(line);
+                line.Y2 = canvas.ActualHeight - margeTopBottom;
+                canvas.Children.Add(line);
             }
             for (int i = 0; i <= (int)nbRows; ++i)
             {
@@ -204,33 +228,28 @@ namespace WpfTest
                 line.Stroke = BrushFromString(COLOR_UP);
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
                 line.X1 = margeLeftRight + LINE_STROCK_THICKNESS;
-                line.X2 = imgPattern.ActualWidth - margeLeftRight;
+                line.X2 = canvas.ActualWidth - margeLeftRight;
                 line.Y1 = margeTopBottom + i * height + (i + 1) * LINE_STROCK_THICKNESS;
                 line.Y2 = line.Y1;
-                imgPattern.Children.Add(line);
+                canvas.Children.Add(line);
             }
+        }
 
-            for(int i = 0; i < pattern.Row; ++i)
-                for(int j = 0; j < pattern.Col; ++j)
-                {
-                    if (pattern[i, j] == PatternRepresentation.ALIVE)
-                    {
-                        Rectangle rectangle = new Rectangle();
-                        rectangle.Fill = BrushFromString(COLOR_DOWN);
-                        rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
-                        rectangle.Width = width;
-                        rectangle.Height = height;
-                        Canvas.SetTop(rectangle, (int)(margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height));
-                        Canvas.SetLeft(rectangle, (int)(margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width));
-                        imgPattern.Children.Add(rectangle);
-                    }
-                }
+        private void drawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height)
+        {
+            Rectangle rectangle = new Rectangle();
+            rectangle.Fill = BrushFromString(COLOR_DOWN);
+            rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
+            rectangle.Width = width;
+            rectangle.Height = height;
+            Canvas.SetTop(rectangle, (int)(margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height));
+            Canvas.SetLeft(rectangle, (int)(margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width));
+            canvas.Children.Add(rectangle);
         }
 
         private void bntInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             pathBtnInfo.Fill = BrushFromString(COLOR_DOWN);
-            
         }
 
         private void bntInfo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
