@@ -27,6 +27,9 @@ namespace WpfTest
         private const string BACKGROUND_GAMEBOARD = "#FF111111";
         private const int LINE_STROCK_THICKNESS = 1;
 
+        private const int NB_ROWS_GRID = 80;
+        private const int NB_COLS_GRID = (int)(NB_ROWS_GRID*1.33);
+
         private bool isInPause;
 
         public MainWindow()
@@ -180,8 +183,8 @@ namespace WpfTest
 
         private void drawGameBoard()
         {
-            double nbRows = 50;
-            double nbCols = 80;
+            double nbRows = NB_ROWS_GRID;
+            double nbCols = NB_COLS_GRID;
             double width = (cvsGameBoard.ActualWidth - nbCols * LINE_STROCK_THICKNESS) / nbCols - 0.025;
             double height = (cvsGameBoard.ActualHeight - nbRows * LINE_STROCK_THICKNESS) / nbRows - 0.025;
 
