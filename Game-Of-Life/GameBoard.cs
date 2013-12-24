@@ -8,22 +8,9 @@ namespace Game_Of_Life
 {
     class GameBoard
     {
-        public enum State {Alive, Emerging, Dying, Empty, Dead};
-        public static readonly Dictionary<State, string> STATE_MATCH;
-
         private int x;
         private int y;
-        private State[,] gameBoard;
-
-        static GameBoard()
-        {
-            STATE_MATCH = new Dictionary<State, string>();
-            STATE_MATCH.Add(State.Alive, "X");
-            STATE_MATCH.Add(State.Emerging, "x");
-            STATE_MATCH.Add(State.Empty, " ");
-            STATE_MATCH.Add(State.Dying, "o");
-            STATE_MATCH.Add(State.Dead, "O");
-        }
+        private Cell[,] gameBoard;
 
         public GameBoard(int x, int y)
         {
@@ -32,13 +19,13 @@ namespace Game_Of_Life
 
             this.x = x;
             this.y = y;
-            gameBoard = new State[x, y];
+            gameBoard = new Cell[x, y];
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                    gameBoard[i, j] = State.Empty;
+                    gameBoard[i, j] = new Cell(0, 0);
         }
 
-        public State this[int k1, int k2]
+        public Cell this[int k1, int k2]
         {
             get
             {

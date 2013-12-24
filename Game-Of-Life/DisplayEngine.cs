@@ -18,9 +18,9 @@ namespace Game_Of_Life
     class DisplayEngine
     {
         public const string COLOR_UP = "#FF555555";
-        public const string COLOR_DOWN = "#77000000";
+        public const string COLOR_DOWN = "#FF222222";
         public const string BACKGROUD_COLOR_BUTTON = "#00000000";
-        public const string BACKGROUND_GENERAL = "#FF222222";
+        public const string BACKGROUND_GENERAL = "#FF111111";
         public const string BACKGROUND_GAMEBOARD = "#FF111111";
 
         private const int LINE_STROCK_THICKNESS = 1;

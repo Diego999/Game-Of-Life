@@ -53,6 +53,11 @@ namespace Game_Of_Life
             lblDelayBetweenGeneration.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
             tbxDelayGeneration.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
 
+            lblLegend1.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            lblLegend2.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            lblValue1.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            lblValue2.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+
             cbxPattern.Background = Brushes.Transparent;
             cbxPattern.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
             cbxPattern.Resources.Add(SystemColors.WindowBrushKey, Brushes.Transparent);

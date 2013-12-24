@@ -64,6 +64,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cell.cs" />
     <Compile Include="DisplayEngine.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="GameEngine.cs" />
