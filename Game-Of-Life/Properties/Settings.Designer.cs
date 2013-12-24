@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WpfTest.Properties
+namespace Game_Of_Life.Properties
 {
 
 

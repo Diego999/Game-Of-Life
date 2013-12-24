@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GOL
+namespace Game_Of_Life
 {
     class GameBoard
     {

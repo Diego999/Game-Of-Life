@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows;
+using System.Windows.Controls;
 
-namespace GOL
+namespace Game_Of_Life
 {
     class GameEngine
     {
+        public const int NB_ROWS_GRID = 80;
+        public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
+
         private GameBoard gameBoard1;
         private GameBoard gameBoard2;
+        private DisplayEngine displayEngine;
+
         private int stepGeneration;
 
         private int currentPopDying;
@@ -21,6 +35,8 @@ namespace GOL
         private int totPopDead;
         private int totPopEmerged;
 
+        bool isInPause;
+
         private static bool IsCellDead(GameBoard.State s)
         {
             return s == GameBoard.State.Empty || s == GameBoard.State.Dead || s == GameBoard.State.Dying;
@@ -31,10 +47,12 @@ namespace GOL
             return s == GameBoard.State.Alive || s == GameBoard.State.Emerging;
         }
 
-        public GameEngine(int x, int y)
+        public GameEngine(Canvas gridGameBoard, Canvas gridPattern)
         {
-            stepGeneration = 0;
+            displayEngine = new DisplayEngine(gridGameBoard, gridPattern);
 
+            stepGeneration = 0;
+            isInPause = true;
             currentPopDying = 0;
             currentPopDead = 0;
             currentPopAlive = 0;
@@ -44,7 +62,7 @@ namespace GOL
             totPopDead = 0;
             totPopEmerged = 0;
 
-            init(x, y);
+            init(NB_COLS_GRID, NB_ROWS_GRID);
         }
 
         public void generateNextStep()
@@ -162,5 +180,14 @@ namespace GOL
             totPopDying += currentPopDying;
             totPopEmerged += currentPopEmerging;
         }
+
+        public bool IsInPause { get { return isInPause; } }
+
+        public void PauseChange()
+        {
+            isInPause = !isInPause;
+        }
+
+        public DisplayEngine DisplayEngine { get { return displayEngine; } }
     }
 }
