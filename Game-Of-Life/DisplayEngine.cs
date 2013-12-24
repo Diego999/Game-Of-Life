@@ -28,10 +28,21 @@ namespace Game_Of_Life
         private Canvas gridGameBoard;
         private Canvas gridPattern;
 
+        private double cellWidthGameBoard;
+        private double cellHeightGameBoard;
+
         public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern)
         {
             this.gridGameBoard = gridGameBoard;
             this.gridPattern = gridPattern;
+            cellWidthGameBoard = 0;
+            cellHeightGameBoard = 0;
+        }
+
+        public void ComputeSizeCellGameBoard()
+        {
+            cellWidthGameBoard = (gridGameBoard.ActualWidth - GameEngine.NB_COLS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_COLS_GRID - 0.025;
+            cellHeightGameBoard = (gridGameBoard.ActualHeight - GameEngine.NB_ROWS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_ROWS_GRID - 0.025;
         }
 
         public static void SetBackground(Control control, string color)
@@ -54,20 +65,15 @@ namespace Game_Of_Life
             return (Brush)(new System.Windows.Media.BrushConverter()).ConvertFromString(color);
         }
 
-        public void drawGameBoard()
+        public void DrawGameBoard()
         {
-            double nbRows = GameEngine.NB_ROWS_GRID;
-            double nbCols = GameEngine.NB_COLS_GRID;
-            double width = (gridGameBoard.ActualWidth - nbCols * LINE_STROCK_THICKNESS) / nbCols - 0.025;
-            double height = (gridGameBoard.ActualHeight - nbRows * LINE_STROCK_THICKNESS) / nbRows - 0.025;
+            double margeTopBottom = (gridGameBoard.ActualHeight - (int)GameEngine.NB_ROWS_GRID * (cellHeightGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+            double margeLeftRight = (gridGameBoard.ActualWidth - (int)GameEngine.NB_COLS_GRID * (cellWidthGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
 
-            double margeTopBottom = (gridGameBoard.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
-            double margeLeftRight = (gridGameBoard.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
-
-            drawGrid(gridGameBoard, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
+            DrawGrid(gridGameBoard, GameEngine.NB_COLS_GRID, GameEngine.NB_ROWS_GRID, margeTopBottom, margeLeftRight, cellWidthGameBoard, cellHeightGameBoard);
         }
 
-        public void drawPattern(PatternRepresentation pattern)
+        public void DrawPattern(PatternRepresentation pattern)
         {
             double nbCols = pattern.Col;
             double nbRows = pattern.Row;
@@ -77,15 +83,15 @@ namespace Game_Of_Life
             double margeTopBottom = (gridPattern.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
             double margeLeftRight = (gridPattern.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
 
-            drawGrid(gridPattern, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
+            DrawGrid(gridPattern, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
 
             for (int i = 0; i < pattern.Row; ++i)
                 for (int j = 0; j < pattern.Col; ++j)
                     if (pattern[i, j] == PatternRepresentation.ALIVE)
-                        drawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height);
+                        DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height);
         }
 
-        private static void drawGrid(Canvas canvas, double nbCols, double nbRows, double margeTopBottom, double margeLeftRight, double width, double height)
+        private static void DrawGrid(Canvas canvas, double nbCols, double nbRows, double margeTopBottom, double margeLeftRight, double width, double height)
         {
             canvas.Children.Clear();
             for (int i = 0; i <= (int)nbCols; ++i)
@@ -112,7 +118,7 @@ namespace Game_Of_Life
             }
         }
 
-        private static void drawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height)
+        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height)
         {
             Rectangle rectangle = new Rectangle();
             rectangle.Fill = BrushFromString(COLOR_DOWN);

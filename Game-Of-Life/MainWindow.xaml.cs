@@ -97,14 +97,15 @@ namespace Game_Of_Life
         {
             cbxPattern.SelectedItem = Patterns.PATTERNS.Keys.First();
             cbxPattern_SelectionChanged(cbxPattern, null);
-            gameEngine.DisplayEngine.drawGameBoard();
+            gameEngine.DisplayEngine.ComputeSizeCellGameBoard();
+            gameEngine.DisplayEngine.DrawGameBoard();
         }
 
         private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             cvsPattern.Children.Clear();
             string t = ((ComboBox)sender).SelectedItem.ToString();
-            gameEngine.DisplayEngine.drawPattern(Patterns.PATTERNS[((ComboBox)sender).SelectedItem.ToString()]);
+            gameEngine.DisplayEngine.DrawPattern(Patterns.PATTERNS[((ComboBox)sender).SelectedItem.ToString()]);
         }
         #endregion
 
