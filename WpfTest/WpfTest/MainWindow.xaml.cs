@@ -40,6 +40,7 @@ namespace WpfTest
             pathBtnUpload.Fill = BrushFromString(COLOR_UP);
             pathBtnPlay.Fill = BrushFromString(COLOR_UP);
             pathBtnPause.Fill = BrushFromString(COLOR_UP);
+            pathBtnInfo.Fill = BrushFromString(COLOR_UP);
 
             btnClean.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnNextGeneration.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
@@ -47,6 +48,7 @@ namespace WpfTest
             btnUpload.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnPlay.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
             btnPause.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
+            bntInfo.Background = BrushFromString(BACKGROUD_COLOR_BUTTON);
 
             btnPause.Visibility = Visibility.Hidden;
 
@@ -223,6 +225,25 @@ namespace WpfTest
                         imgPattern.Children.Add(rectangle);
                     }
                 }
+        }
+
+        private void bntInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            pathBtnInfo.Fill = BrushFromString(COLOR_DOWN);
+            
+        }
+
+        private void bntInfo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            pathBtnInfo.Fill = BrushFromString(COLOR_UP);
+            MessageBox.Show(@"The game of life is a game created by John Horton Conway in 1970. The game consists in a grid of cells where a cell can have one state among several and then, they live depending 3 rules (Wikipedia) :
+
+1) Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+2) Any live cell with two or three live neighbours lives on to the next generation.
+3) Any live cell with more than three live neighbours dies, as if by overcrowding.
+4) Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+The game generate each step of living and you can see new cells emerging, dying, dead or alive.", "About Game Of Life", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
