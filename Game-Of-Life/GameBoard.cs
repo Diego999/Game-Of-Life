@@ -22,7 +22,7 @@ namespace Game_Of_Life
             gameBoard = new Cell[x, y];
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                    gameBoard[i, j] = new Cell(0, 0);
+                    gameBoard[i, j] = new Cell();
         }
 
         public Cell this[int k1, int k2]

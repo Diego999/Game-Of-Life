@@ -27,7 +27,7 @@ namespace Game_Of_Life
         {
             InitializeComponent();
             isMouseDown = false;
-            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell);
+            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1, lblValue2);
 
             DisplayEngine.SetFill(pathBtnClean, DisplayEngine.COLOR_UP);
             DisplayEngine.SetFill(pathBtnNextGeneration, DisplayEngine.COLOR_UP);
@@ -66,7 +66,6 @@ namespace Game_Of_Life
 
         private void drawPlayPause(bool isInPause)
         {
-
             btnPause.Visibility = isInPause ? Visibility.Hidden : Visibility.Visible;
             btnPlay.Visibility = isInPause ? Visibility.Visible : Visibility.Hidden;
         }

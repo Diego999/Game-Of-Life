@@ -12,8 +12,6 @@ namespace Game_Of_Life
 
         private enum State { Alive, Emerging, Dying, Empty, Dead };
 
-        private double x;
-        private double y;
         private State state;
 
         static Cell()
@@ -26,10 +24,8 @@ namespace Game_Of_Life
             STATE_MATCH.Add(State.Dead, "#55FF0000");
         }
 
-        public Cell(double x, double y)
+        public Cell()
         {
-            this.x = x;
-            this.y = y;
             this.state = State.Empty;
         }
 
@@ -97,8 +93,5 @@ namespace Game_Of_Life
         {
             return state == State.Alive || state == State.Emerging;
         }
-
-        public double X { get { return x; } }
-        public double Y { get { return y; } }
     }
 }

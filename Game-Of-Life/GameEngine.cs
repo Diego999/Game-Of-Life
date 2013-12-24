@@ -35,11 +35,14 @@ namespace Game_Of_Life
         private int totPopDead;
         private int totPopEmerged;
 
+        private int lastClickX;
+        private int lastClickY;
+
         bool isInPause;
 
-        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell)
+        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
         {
-            displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell);
+            displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1, lblValue2);
 
             stepGeneration = 0;
             isInPause = true;
@@ -52,10 +55,22 @@ namespace Game_Of_Life
             totPopDead = 0;
             totPopEmerged = 0;
 
-            init(NB_COLS_GRID, NB_ROWS_GRID);
+            lastClickX = -10;
+            lastClickY = -10;
+
+            Init(NB_COLS_GRID, NB_ROWS_GRID);
         }
 
-        public void generateNextStep()
+        public void run()
+        {
+            while(!isInPause)
+            {
+                Render();
+                GenerateNextStep();
+            }
+        }
+
+        public void GenerateNextStep()
         {
             ++stepGeneration;
             currentPopAlive = currentPopDead = currentPopDying = currentPopEmerging = 0;
@@ -106,53 +121,29 @@ namespace Game_Of_Life
         public void ClickCell(double x, double y)
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
-            //displayEngine.DrawGameBoard();
-            displayEngine.DrawCellGameBoard((int)y, (int)x);
-            
-        }
-
-        public void render()
-        {
-            /*Console.WriteLine("\t\tGeneration " + stepGeneration);
-            Console.WriteLine();
-            Console.WriteLine("Current pop alive : " + (currentPopAlive + currentPopEmerging + currentPopDying));
-            Console.WriteLine("Current pop emerging : " + currentPopEmerging);
-            Console.WriteLine("Current pop dying : " + currentPopDying);
-            Console.WriteLine("Current pop dead : " + currentPopDead);
-            Console.WriteLine();
-            Console.WriteLine("Total pop emerging : " + totPopEmerged);
-            Console.WriteLine("Total pop dead : " + totPopDead);
-            Console.WriteLine("Total pop dying : " + totPopDying);
-            Console.WriteLine();
-
-            for (int j = 0; j <= gameBoard1.GetUpperBound(1) + 2; ++j)
-                Console.Write("-");
-            Console.WriteLine();
-            for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
-            {
-                Console.Write("|");
-                for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
-                {
-                    Console.Write(GameBoard.STATE_MATCH[gameBoard1[i, j]]);
-                }
-                Console.Write("|");
-                Console.WriteLine();
+            if (lastClickX != (int)x && lastClickY != (int)y)
+            {   
+                gameBoard1[(int)x, (int)y].SetAlive();
+                displayEngine.DrawCellGameBoard((int)y, (int)x, gameBoard1[(int)x, (int)y]);
             }
-            for (int j = 0; j <= gameBoard1.GetUpperBound(1) + 2; ++j)
-                Console.Write("-");
-            Console.WriteLine();*/
+            lastClickX = (int)y;
+            lastClickY = (int)x;
         }
 
-        private void init(int x, int y)
+        public void Render()
+        {
+            displayEngine.DrawStatistics(stepGeneration, currentPopAlive + currentPopEmerging + currentPopDying, currentPopEmerging, currentPopDying, currentPopDead, totPopEmerged, totPopDead, totPopDying);
+
+            displayEngine.ClearGameBoardCells();
+            for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
+                for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
+                    displayEngine.DrawCellGameBoard(i, j, gameBoard1[i, j]);
+        }
+
+        private void Init(int x, int y)
         {
             gameBoard1 = new GameBoard(x, y);
             gameBoard2 = new GameBoard(x, y);
-
-            gameBoard1[2, 0].SetAlive();
-            gameBoard1[2, 1].SetAlive();
-            gameBoard1[2, 2].SetAlive();
-            gameBoard1[1, 2].SetAlive();
-            gameBoard1[0, 1].SetAlive();
 
             for(int i = 0; i < gameBoard1.GetUpperBound(0); ++i)
                 for(int j = 0; j < gameBoard1.GetUpperBound(1); ++j)
