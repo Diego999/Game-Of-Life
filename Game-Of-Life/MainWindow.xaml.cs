@@ -20,14 +20,14 @@ namespace Game_Of_Life
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private GameEngine gameEngine;
-        
+        private bool isMouseDown;
+   
         public MainWindow()
         {
             InitializeComponent();
-
-            gameEngine = new GameEngine(cvsGameBoard, cvsPattern);
+            isMouseDown = false;
+            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell);
 
             DisplayEngine.SetFill(pathBtnClean, DisplayEngine.COLOR_UP);
             DisplayEngine.SetFill(pathBtnNextGeneration, DisplayEngine.COLOR_UP);
@@ -78,6 +78,30 @@ namespace Game_Of_Life
         }
 
         #region MainWindow Miscellaneous event handler
+
+        private void ClickCell(Point p)
+        {
+            if(p.Y < cvsGameBoard.ActualHeight-1 && p.Y > 1 && p.X > 1 && p.X < cvsGameBoard.ActualWidth)
+                gameEngine.ClickCell(p.X, p.Y);
+        }
+
+        private void cvsGameBoard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isMouseDown = true;
+            ClickCell(e.GetPosition((Canvas)sender));
+        }
+
+        private void cvsGameBoard_MouseMove(object sender, MouseEventArgs e)
+        {
+            if(isMouseDown)
+                ClickCell(e.GetPosition((Canvas)sender));
+        }
+
+        private void cvsGameBoard_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isMouseDown = false;
+        }
+
         private void sliderDelayGeneration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             //There is a bidirectional dependency between tbxDelayGeneration and the sliderDelayGeneration

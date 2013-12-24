@@ -14,8 +14,10 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Column="0" Grid.Row="0" Name="cvsGameBoard">
-
+        <Canvas Panel.ZIndex="1" Grid.Column="0" Grid.Row="0" Name="cvsGameBoard" MouseLeftButtonDown="cvsGameBoard_MouseLeftButtonDown" MouseMove="cvsGameBoard_MouseMove" MouseLeftButtonUp="cvsGameBoard_MouseLeftButtonUp">
+            <Canvas Background="Transparent" Panel.ZIndex="0" Name="cvsGameBoardCell">
+                
+            </Canvas>
         </Canvas>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>

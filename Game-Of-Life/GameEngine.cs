@@ -37,9 +37,9 @@ namespace Game_Of_Life
 
         bool isInPause;
 
-        public GameEngine(Canvas gridGameBoard, Canvas gridPattern)
+        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell)
         {
-            displayEngine = new DisplayEngine(gridGameBoard, gridPattern);
+            displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell);
 
             stepGeneration = 0;
             isInPause = true;
@@ -101,6 +101,14 @@ namespace Game_Of_Life
             GameBoard temp = gameBoard1;
             gameBoard1 = gameBoard2;
             gameBoard2 = temp;
+        }
+
+        public void ClickCell(double x, double y)
+        {
+            displayEngine.GetCellClickCoordinate(ref x, ref y);
+            //displayEngine.DrawGameBoard();
+            displayEngine.DrawCellGameBoard((int)y, (int)x);
+            
         }
 
         public void render()
