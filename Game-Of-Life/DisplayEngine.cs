@@ -26,9 +26,13 @@ namespace Game_Of_Life
         private static readonly int LINE_STROCK_THICKNESS = 1;
         private static readonly int[,] FACTORS;
 
+        private Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory;
+
         private Canvas gridGameBoard;
         private Canvas gridPattern;
         private Canvas gridGameBoardCell;
+        private Label lblValue1;
+        private Label lblValue2;
 
         private double cellWidthGameBoard;
         private double cellHeightGameBoard;
@@ -40,15 +44,26 @@ namespace Game_Of_Life
             FACTORS = new int[4, 4] { {0, 0, 0, 2}, {1, 0, 0, 2}, {0, 1, 0, 0}, {0, 1, 2, 0} }; //w = 1, h = 2, for the draw of a cell in gridGameBoard
         }
 
-        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell)
+        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
         {
             this.gridGameBoardCell = gridGameBoardCell;
             this.gridGameBoard = gridGameBoard;
             this.gridPattern = gridPattern;
+            this.lblValue1 = lblValue1;
+            this.lblValue2 = lblValue2;
+
             cellWidthGameBoard = 0;
             cellHeightGameBoard = 0;
             cellMargeTopBottom = 0;
             cellMargeLeftRight = 0;
+
+            shapeHistory = new Dictionary<int, Dictionary<int, List<UIElement>>>();
+            for (int i = 0; i < GameEngine.NB_ROWS_GRID; ++i)
+            {
+                shapeHistory[i] = new Dictionary<int, List<UIElement>>();
+                for (int j = 0; j < GameEngine.NB_COLS_GRID; ++j)
+                    shapeHistory[i][j] = new List<UIElement>();
+            }
         }
 
         public void ComputeSizeCellGameBoard()
@@ -85,6 +100,12 @@ namespace Game_Of_Life
             y -= cellMargeTopBottom;
             x /= (cellWidthGameBoard + LINE_STROCK_THICKNESS);
             y /= (cellHeightGameBoard + LINE_STROCK_THICKNESS);
+        }
+
+        public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead, double totPopEmerged, double totPopDead, double totPopDying)
+        {
+            lblValue1.Content = currentPopAlive.ToString() + Environment.NewLine + currentPopEmerging.ToString() + Environment.NewLine + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
+            lblValue2.Content = generation.ToString() + Environment.NewLine + totPopEmerged.ToString() + Environment.NewLine + totPopDead.ToString() + Environment.NewLine + totPopDying.ToString();
         }
 
         public void DrawGameBoard()
@@ -137,13 +158,22 @@ namespace Game_Of_Life
             }
         }
 
-        public void DrawCellGameBoard(int i, int j)
+        public void ClearGameBoardCells()
         {
-            DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, "#FFFF0000");
+            gridGameBoardCell.Children.Clear();
         }
 
-        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, string color)
+        public void DrawCellGameBoard(int i, int j, Cell cell)
         {
+            DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, cell.GetRender(), shapeHistory);
+        }
+
+        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, string color, Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory = null)
+        {
+            if(shapeHistory != null)
+                foreach (UIElement ui in shapeHistory[i][j])
+                    canvas.Children.Remove(ui);
+
             Rectangle rectangle = new Rectangle();
             rectangle.Fill = BrushFromString(color);
             rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
@@ -154,6 +184,8 @@ namespace Game_Of_Life
             Canvas.SetTop(rectangle, top);
             Canvas.SetLeft(rectangle, left);
             canvas.Children.Add(rectangle);
+            if (shapeHistory != null)
+                shapeHistory[i][j].Add(rectangle);
 
             for(int ii = 0; ii <= FACTORS.GetUpperBound(1); ++ii)
             {
@@ -165,6 +197,8 @@ namespace Game_Of_Life
                 line.Y1 = top + GetFactor(ii, 2, width, height);
                 line.Y2 = line.Y1 + GetFactor(ii, 3, width, height);
                 canvas.Children.Add(line);
+                if (shapeHistory != null)
+                    shapeHistory[i][j].Add(line);
             }
         }
 
