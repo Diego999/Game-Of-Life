@@ -24,15 +24,29 @@ namespace Game_Of_Life
             string[] nl = new string[] { Environment.NewLine};
             foreach(string filePath in filePaths)
             {
-                string key = Path.GetFileNameWithoutExtension(filePath);
                 String[] text = System.IO.File.ReadAllText(filePath).Split(nl, StringSplitOptions.None);
-                PatternRepresentation value = new PatternRepresentation(text.Length, text[0].Length);
+                if (text.Length > 0)
+                {
+                    string key = Path.GetFileNameWithoutExtension(filePath);
+                    PatternRepresentation value = new PatternRepresentation(text.Length, text[0].Length);
 
-                for (int i = 0; i < text.Length; ++i)
-                    for (int j = 0; j < text[i].Length; ++j)
-                        if (text[i][j].ToString() == PatternRepresentation.ALIVE)
-                            value[i, j] = PatternRepresentation.ALIVE;
-                PATTERNS.Add(key, value);
+                    bool isPatternValid = true;
+                    for (int i = 0; i < text.Length && isPatternValid; ++i)
+                    {
+                        isPatternValid = text[i].Length == text[0].Length;
+                        for (int j = 0; j < text[i].Length && isPatternValid; ++j)
+                            isPatternValid = text[i][j].ToString() == PatternRepresentation.ALIVE || text[i][j].ToString() == PatternRepresentation.EMPTY;
+                    }
+
+                    if(isPatternValid)
+                    {
+                        for (int i = 0; i < text.Length; ++i)
+                            for (int j = 0; j < text[i].Length; ++j)
+                                if (text[i][j].ToString() == PatternRepresentation.ALIVE)
+                                    value[i, j] = PatternRepresentation.ALIVE;
+                        PATTERNS.Add(key, value);
+                    }
+                }
             }
         }
     }
