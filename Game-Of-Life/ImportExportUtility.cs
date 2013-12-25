@@ -76,6 +76,7 @@ namespace Game_Of_Life
                 FileStream file = File.Create(sfd.FileName);
                 for (int i = 0; i < bytes.Length; ++i)
                     file.WriteByte(bytes[i]);
+                file.Close();
             }
         }
 
@@ -139,13 +140,16 @@ namespace Game_Of_Life
                 GameBoard gameboard2Temp = new GameBoard(rows, cols);
                 for (int i = 0; i < rows; ++i)
                     for (int j = 0; j < cols; ++j)
-                        if(!STATE_MATCH_INVERSE.ContainsKey(input[i * (1 + j)].ToString()))
+                    { 
+                        string c = input[i * cols + j].ToString();
+                        if(!STATE_MATCH_INVERSE.ContainsKey(c))
                         { 
                             ShowCorruptFileDialog();
                             return false;
                         }
                         else
-                            gameboard1Temp[i, j] = gameboard2Temp[i, j] = STATE_MATCH_INVERSE[input[i * (1 + j)].ToString()];
+                            gameboard1Temp[i, j] = gameboard2Temp[i, j] = STATE_MATCH_INVERSE[c];
+                    }
                 gameboard1 = gameboard1Temp;
                 gameboard2 = gameboard2Temp;
 
