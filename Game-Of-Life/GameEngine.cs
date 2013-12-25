@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Controls;
 using System.Threading;
-using System.Security.Cryptography;
 
 namespace Game_Of_Life
 {
@@ -59,7 +48,6 @@ namespace Game_Of_Life
         /// <param name="gridPattern"></param>
         /// <param name="gridGameBoardCell"></param>
         /// <param name="lblValue1"></param>
-        /// <param name="lblValue2"></param>
         public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, TextBlock lblValue1)
         {
             displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1);
@@ -96,10 +84,11 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// 
+        /// Add or remove a cell of the game board
         /// </summary>
         /// <param name="x">Row</param>
         /// <param name="y">Col</param>
+        /// <param name="bool">True = To add, False = To remove</param>
         public void AddRemobeCellGlobalCoordinate(double x, double y, bool add = true)
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
@@ -141,8 +130,7 @@ namespace Game_Of_Life
                             for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
                                 if (rand.Next(0, PROBABILITY_DRAWING_CELL) == 0)
                                     gameBoard1[i, j] = gameBoard2[i, j] = states[rand.Next(states.Length)];
-                    }
-                    );
+                    });
             }
             Task.WaitAll(tasks);
             Init();
@@ -240,7 +228,7 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// Realize the rending
+        /// Realize the rendering
         /// </summary>
         private void Render()
         {
@@ -248,8 +236,8 @@ namespace Game_Of_Life
             
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
-                    if(gameBoard1[i, j] != GameBoard.State.Empty)
-                        displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
+                   if(gameBoard1[i, j] != GameBoard.State.Empty)
+                    displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
         }
 
         /// <summary>
@@ -260,7 +248,7 @@ namespace Game_Of_Life
             System.Threading.Thread.Sleep(delay);
             while (!isInPause)
             {
-                Application.Current.Dispatcher.Invoke(actionGUI);
+                Application.Current.Dispatcher.Invoke(actionGUI); // It's a very bad habit to draw in the GUI with another thread than the main, so we force the main thread to execute this action
                 System.Threading.Thread.Sleep(delay);
             }
         }

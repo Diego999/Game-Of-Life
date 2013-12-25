@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game_Of_Life
 {
     /// <summary>
-    /// Represents a pattern
+    /// Represents a pattern for the game of life
     /// </summary>
     public class PatternRepresentation
     {

@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace Game_Of_Life
 {
     /// <summary>
-    /// Static class which holds all the patterns
+    /// Static class which holds all the patterns find in the folder "patterns"
     /// </summary>
     class Patterns
     {
-        /// <summary>
-        /// Dictionary where the key is the name of the pattern and the value the pattern
-        /// </summary>
-        public static readonly Dictionary<string, PatternRepresentation> PATTERNS;
+        public static readonly Dictionary<string, PatternRepresentation> PATTERNS; // Dictionary where the key is the name of the pattern and the value the pattern
         private static readonly string DIRECTORY_PATTERNS = "patterns";
         private static readonly string PATTERN_EXT = "txt";
+
         static Patterns()
         {
             PATTERNS = new Dictionary<string, PatternRepresentation>();

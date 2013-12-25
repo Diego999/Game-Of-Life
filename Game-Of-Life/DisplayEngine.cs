@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Game_Of_Life
@@ -30,7 +22,7 @@ namespace Game_Of_Life
 
         private static readonly int LINE_STROCK_THICKNESS = 1;
 
-        private Dictionary<int, Dictionary<int, Rectangle>> shapeHistory; // Contains the shape at our coordinate system
+        private Dictionary<int, Dictionary<int, Rectangle>> shapeHistory; // Contains the shape at our coordinate system, use for optimization
 
         private Canvas gridGameBoard;
         private Canvas gridPattern;
@@ -42,6 +34,13 @@ namespace Game_Of_Life
         private double cellMargeTopBottom;
         private double cellMargeLeftRight;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="gridGameBoard"></param>
+        /// <param name="gridPattern"></param>
+        /// <param name="gridGameBoardCell"></param>
+        /// <param name="lblValue1">Reference the statistics fields</param>
         public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, TextBlock lblValue1)
         {
             this.gridGameBoardCell = gridGameBoardCell;
@@ -117,6 +116,12 @@ You can interact with the simulation, by pressing the left button of the mouse o
 
         #region DisplayEngine Draw
 
+        /// <summary>
+        /// Draw a grid for a cell. Only use to draw the grid for the legends
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public static void DrawGridForACell(Canvas canvas, double width, double height)
         {
             DrawGrid(canvas, 1, 1, 0, 0, width, height);
@@ -130,9 +135,6 @@ You can interact with the simulation, by pressing the left button of the mouse o
         /// <param name="currentPopEmerging"></param>
         /// <param name="currentPopDying"></param>
         /// <param name="currentPopDead"></param>
-        /// <param name="totPopEmerged"></param>
-        /// <param name="totPopDead"></param>
-        /// <param name="totPopDying"></param>
         public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead)
         {
             lblValue1.Text = generation.ToString() + Environment.NewLine + (currentPopAlive + currentPopEmerging + currentPopDying).ToString() + Environment.NewLine + currentPopEmerging.ToString() + Environment.NewLine + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
@@ -218,7 +220,7 @@ You can interact with the simulation, by pressing the left button of the mouse o
         }
 
         /// <summary>
-        /// 
+        /// Draw a cell in the game board
         /// </summary>
         /// <param name="i">Row</param>
         /// <param name="j">Col</param>
@@ -229,7 +231,7 @@ You can interact with the simulation, by pressing the left button of the mouse o
         }
 
         /// <summary>
-        /// 
+        /// Draw a cell
         /// </summary>
         /// <param name="canvas"></param>
         /// <param name="i">Row</param>
@@ -265,7 +267,6 @@ You can interact with the simulation, by pressing the left button of the mouse o
                 if (shapeHistory != null)
                     shapeHistory[i][j] = rectangle;
             }
-
             return !isAlreadyIn;
         }
 

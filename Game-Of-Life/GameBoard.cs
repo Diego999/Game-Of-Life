@@ -1,16 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Game_Of_Life
 {
@@ -19,7 +9,7 @@ namespace Game_Of_Life
     /// </summary>
     class GameBoard
     {
-        private static readonly Dictionary<State, Brush> STATE_MATCH; // match a State to a Brush
+        private static readonly Dictionary<State, Brush> STATE_MATCH; // To match a State to a Brush
         public enum State { Alive, Emerging, Dying, Empty, Dead };
 
         public static readonly int MIN_ROWS = 10;
@@ -56,7 +46,7 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// Define is a cell is "dead", means having a state amoug Empty, Dead & Dying
+        /// Define if a cell is "dead", means having a state amoug Empty, Dead & Dying
         /// </summary>
         /// <param name="state">Cell's state</param>
         /// <returns>bool</returns>
@@ -66,7 +56,7 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// Define is a cell is "alive", means having a state amoug Alive & Emerging
+        /// Define if a cell is "alive", means having a state amoug Alive & Emerging
         /// </summary>
         /// <param name="state">Cell's state</param>
         /// <returns>bool</returns>
@@ -83,30 +73,6 @@ namespace Game_Of_Life
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
                     gameBoard[i, j] = State.Empty;
-        }
-
-        public State this[int k1, int k2]
-        {
-            get
-            {
-                manageKeys(ref k1, ref k2);
-                return gameBoard[k1, k2];
-            }
-            set
-            {
-                manageKeys(ref k1, ref k2);
-                gameBoard[k1, k2] = value;
-            }
-        }
-
-        /// <summary>
-        /// The GetUpperBound than a simple Array
-        /// </summary>
-        /// <param name="dim">The dimension desired</param>
-        /// <returns>The length</returns>
-        public int GetUpperBound(int dim)
-        {
-            return gameBoard.GetUpperBound(dim);
         }
 
         /// <summary>
@@ -136,5 +102,32 @@ namespace Game_Of_Life
             if (k2 >= y)
                 k2 %= y;
         }
+
+        #region GameBoard Get/Set
+        public State this[int k1, int k2]
+        {
+            get
+            {
+                manageKeys(ref k1, ref k2);
+                return gameBoard[k1, k2];
+            }
+            set
+            {
+                manageKeys(ref k1, ref k2);
+                gameBoard[k1, k2] = value;
+            }
+        }
+
+        /// <summary>
+        /// The GetUpperBound than a simple Array
+        /// </summary>
+        /// <param name="dim">The dimension desired</param>
+        /// <returns>The length</returns>
+        public int GetUpperBound(int dim)
+        {
+            return gameBoard.GetUpperBound(dim);
+        }
+
+#endregion
     }
 }

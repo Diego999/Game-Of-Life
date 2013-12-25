@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 
 namespace Game_Of_Life
 {
+    /// <summary>
+    /// Class which allows to export/import a game board
+    /// </summary>
     class ImportExportUtility
     {
         private static readonly Dictionary<GameBoard.State, string> STATE_MATCH;
@@ -49,10 +50,8 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// Constructor, we want to modify the reference of the object when we import
+        /// Constructor
         /// </summary>
-        /// <param name="gameboard1"></param>
-        /// <param name="gameboard2"></param>
         public ImportExportUtility()
         {
             ofd = new OpenFileDialog();
@@ -63,6 +62,11 @@ namespace Game_Of_Life
             ofd.Filter = sfd.Filter = FILENAME + " Files (*." + EXTENSION + ")|*." + EXTENSION;    
         }
 
+        /// <summary>
+        /// Export a gameboard
+        /// </summary>
+        /// <param name="stepGeneration"></param>
+        /// <param name="gameboard1"></param>
         public void Export(int stepGeneration, ref GameBoard gameboard1)
         {
             if(sfd.ShowDialog() == true)
@@ -80,6 +84,13 @@ namespace Game_Of_Life
             }
         }
 
+        /// <summary>
+        /// Import a game board, we need nbGeneration, gameboard1 & gameboard2 to update the statistics and earn time for the next drawing
+        /// </summary>
+        /// <param name="nbGeneration"></param>
+        /// <param name="gameboard1"></param>
+        /// <param name="gameboard2"></param>
+        /// <returns></returns>
         public bool Import(ref int nbGeneration, ref GameBoard gameboard1, ref GameBoard gameboard2)
         {
             if(ofd.ShowDialog() == true)
@@ -158,6 +169,8 @@ namespace Game_Of_Life
             return false;
         }
 
+        #region ImportExportUtility static
+
         /// <summary>
         /// Show an error dialog with the error "File corrupted !"
         /// </summary>
@@ -184,11 +197,13 @@ namespace Game_Of_Life
         /// <param name="bytes">byte array to convert</param>
         /// <returns>string</returns>
         /// ///
-        private string GetString(byte[] bytes)
+        private static string GetString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
+
+        #endregion
     }
 }

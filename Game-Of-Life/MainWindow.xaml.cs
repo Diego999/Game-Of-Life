@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Game_Of_Life
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Logic interaction for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -25,6 +18,10 @@ namespace Game_Of_Life
         private bool isMouseDownRight;
         private int lastClickX; //Rows
         private int lastClickY; //Cols
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -102,8 +99,6 @@ namespace Game_Of_Life
                 cbxPattern.Items.Add(key);
         }
 
-        #region MainWindow Miscellaneous event handler
-
         private void AddRemoveCell(Point p, bool add = true)
         {
             if (p.Y < cvsGameBoard.ActualHeight - 1 && p.Y > 1 && p.X > 1 && p.X < cvsGameBoard.ActualWidth && lastClickX != (int)p.Y && lastClickY != (int)p.X)
@@ -114,35 +109,7 @@ namespace Game_Of_Life
             }
         }
 
-        private void cvsGameBoard_MouseButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                isMouseDownLeft = true;
-                AddRemoveCell(e.GetPosition((Canvas)sender));
-            }
-            if(e.RightButton == MouseButtonState.Pressed)
-            {
-                isMouseDownRight = true;
-                AddRemoveCell(e.GetPosition((Canvas)sender), false);
-            }
-        }
-
-        private void cvsGameBoard_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isMouseDownLeft && e.LeftButton == MouseButtonState.Pressed)
-                AddRemoveCell(e.GetPosition((Canvas)sender));
-            if (isMouseDownRight && e.RightButton == MouseButtonState.Pressed)
-                AddRemoveCell(e.GetPosition((Canvas)sender), false);
-        }
-
-        private void cvsGameBoard_MouseButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if(e.LeftButton == MouseButtonState.Pressed)
-                isMouseDownLeft = false;
-            if (e.RightButton == MouseButtonState.Pressed)
-                isMouseDownRight = false;
-        }
+        #region MainWindow Miscellaneous event handler
 
         private void sliderDelayGeneration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -190,6 +157,14 @@ namespace Game_Of_Life
                 gameEngine.PauseChange();
         }
 
+        private void cvsGameBoard_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMouseDownLeft && e.LeftButton == MouseButtonState.Pressed)
+                AddRemoveCell(e.GetPosition((Canvas)sender));
+            if (isMouseDownRight && e.RightButton == MouseButtonState.Pressed)
+                AddRemoveCell(e.GetPosition((Canvas)sender), false);
+        }
+
         #endregion
 
         #region MainWindow MouseLeftButtonDown
@@ -230,6 +205,20 @@ namespace Game_Of_Life
         private void btnGenerate_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             pathBtnGenerate.Fill = DisplayEngine.COLOR_DOWN;
+        }
+
+        private void cvsGameBoard_MouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                isMouseDownLeft = true;
+                AddRemoveCell(e.GetPosition((Canvas)sender));
+            }
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                isMouseDownRight = true;
+                AddRemoveCell(e.GetPosition((Canvas)sender), false);
+            }
         }
 
         #endregion
@@ -280,6 +269,15 @@ namespace Game_Of_Life
             pathBtnGenerate.Fill = DisplayEngine.COLOR_UP;
             gameEngine.GenerateGrid();
         }
+
+        private void cvsGameBoard_MouseButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                isMouseDownLeft = false;
+            if (e.RightButton == MouseButtonState.Pressed)
+                isMouseDownRight = false;
+        }
+
         #endregion
     }
 
