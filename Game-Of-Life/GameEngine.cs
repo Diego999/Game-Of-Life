@@ -18,7 +18,7 @@ namespace Game_Of_Life
         public const int DEFAULT_DELAY = 250;
         public const int DELAY_MAX = 5000;
 
-        private const int PROBABILITY_DRAWING_CELL = 2; // 1/x % to create a cell
+        private const int PROBABILITY_DRAWING_CELL = 3; // 1/x % to create a cell
 
         private GameBoard gameBoard1;
         private GameBoard gameBoard2;
