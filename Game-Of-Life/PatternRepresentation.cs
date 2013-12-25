@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Game_Of_Life
 {
+    /// <summary>
+    /// Represents a pattern
+    /// </summary>
     public class PatternRepresentation
     {
         private int rows;
@@ -15,6 +18,11 @@ namespace Game_Of_Life
         public static readonly string ALIVE = "x";
         public static readonly string EMPTY = "-";
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="cols"></param>
         public PatternRepresentation(int rows, int cols)
         {
             if (rows < 1 || cols < 1)
@@ -27,6 +35,19 @@ namespace Game_Of_Life
                 for (int j = 0; j < cols; ++j)
                     pattern[i, j] = EMPTY;
         }
+
+        /// <summary>
+        /// Check if the keys are correct
+        /// </summary>
+        /// <param name="k1"></param>
+        /// <param name="k2"></param>
+        /// <returns>bool</returns>
+        private bool manageKeys(int k1, int k2)
+        {
+            return k1 >= 0 && k1 < rows && k2 >= 0 && k2 < cols;
+        }
+
+        #region PatternRepresentation Get / Set
 
         public string this[int k1, int k2]
         {
@@ -42,15 +63,12 @@ namespace Game_Of_Life
             }
         }
 
-        private bool manageKeys(int k1, int k2)
-        {
-            return k1 >= 0 && k1 < rows && k2 >= 0 && k2 < cols;
-        }
-
         public int Row { get { return rows; } }
 
         public int Col { get { return cols; } }
 
-        public String[,] Pattern { get {return pattern;}}
+        public String[,] Pattern { get {return pattern;} }
+
+        #endregion
     }
 }

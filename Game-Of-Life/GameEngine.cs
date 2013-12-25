@@ -12,13 +12,21 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
 
 namespace Game_Of_Life
 {
+    /// <summary>
+    /// GameEngine of a game of life
+    /// </summary>
     class GameEngine
     {
         public const int NB_ROWS_GRID = 80;
         public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
+
+        public const int DELAY_MIN = 5;
+        public const int DEFAULT_DELAY = 250;
+        public const int DELAY_MAX = 1000;
 
         private GameBoard gameBoard1;
         private GameBoard gameBoard2;
@@ -35,14 +43,26 @@ namespace Game_Of_Life
         private int totPopDead;
         private int totPopEmerged;
 
+        private int delay;
+
         bool isInPause;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="gridGameBoard"></param>
+        /// <param name="gridPattern"></param>
+        /// <param name="gridGameBoardCell"></param>
+        /// <param name="lblValue1"></param>
+        /// <param name="lblValue2"></param>
         public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
         {
             displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1, lblValue2);
 
             stepGeneration = 0;
             isInPause = true;
+            delay = DEFAULT_DELAY;
+            
             currentPopDying = 0;
             currentPopDead = 0;
             currentPopAlive = 0;
@@ -55,16 +75,40 @@ namespace Game_Of_Life
             Init(NB_ROWS_GRID, NB_COLS_GRID);
         }
 
-        public void run()
+        /// <summary>
+        /// Generate games until isInPause equals false
+        /// </summary>
+        public void Play()
         {
-            while(!isInPause)
-            {
-                Render();
-                GenerateNextStep();
-            }
+            Render();
+            (new Thread(ThreadTask)).Start();
         }
 
-        public void GenerateNextStep()
+        /// <summary>
+        /// Render then generate a step
+        /// </summary>
+        public void RunWok()
+        {
+            GenerateNextStep();
+            Render();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x">Row</param>
+        /// <param name="y">Col</param>
+        public void ClickCell(double x, double y)
+        {
+            displayEngine.GetCellClickCoordinate(ref x, ref y);
+            gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
+            displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y]));
+        }
+
+        /// <summary>
+        /// Generate the next game
+        /// </summary>
+        private void GenerateNextStep()
         {
             ++stepGeneration;
             currentPopAlive = currentPopDead = currentPopDying = currentPopEmerging = 0;
@@ -115,20 +159,12 @@ namespace Game_Of_Life
         }
 
         /// <summary>
-        /// 
+        /// Realize the rending
         /// </summary>
-        /// <param name="x">Row</param>
-        /// <param name="y">Col</param>
-        public void ClickCell(double x, double y)
-        {
-            displayEngine.GetCellClickCoordinate(ref x, ref y);
-            gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
-            displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y]));
-        }
-
-        public void Render()
+        private void Render()
         {
             displayEngine.DrawStatistics(stepGeneration, currentPopAlive + currentPopEmerging + currentPopDying, currentPopEmerging, currentPopDying, currentPopDead, totPopEmerged, totPopDead, totPopDying);
+            
 
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
@@ -136,6 +172,24 @@ namespace Game_Of_Life
                         displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
         }
 
+        /// <summary>
+        /// Task executed by the thread which runs the game
+        /// </summary>
+        private void ThreadTask()
+        {
+            System.Threading.Thread.Sleep(delay);
+            while (!isInPause)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() => { RunWok(); }));
+                System.Threading.Thread.Sleep(delay);
+            }
+        }
+
+        /// <summary>
+        /// Init the statistics
+        /// </summary>
+        /// <param name="x">Rows</param>
+        /// <param name="y">Cols</param>
         private void Init(int x, int y)
         {
             gameBoard1 = new GameBoard(x, y);
@@ -167,6 +221,8 @@ namespace Game_Of_Life
         }
 
         public DisplayEngine DisplayEngine { get { return displayEngine; } }
+
+        public int Delay { set { delay = (value >= DELAY_MIN && value <= DELAY_MAX) ? value : DEFAULT_DELAY; } }
 
         #endregion
     }

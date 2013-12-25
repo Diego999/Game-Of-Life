@@ -15,6 +15,9 @@ using System.Windows.Shapes;
 
 namespace Game_Of_Life
 {
+    /// <summary>
+    /// Class which does the rendering depending the GameEngine
+    /// </summary>
     class DisplayEngine
     {
         public static readonly Brush COLOR_UP = BrushFromString("#FF555555");
@@ -22,11 +25,11 @@ namespace Game_Of_Life
         public static readonly Brush BACKGROUD_COLOR_BUTTON = BrushFromString("#00000000");
         public static readonly Brush BACKGROUND_GENERAL = BrushFromString("#FF111111");
         public static readonly Brush BACKGROUND_GAMEBOARD = BrushFromString("#FF111111");
+        public static readonly Brush WARNING = BrushFromString("#55FF0000");
 
         private static readonly int LINE_STROCK_THICKNESS = 1;
-        private static readonly int[,] FACTORS;
 
-        private Dictionary<int, Dictionary<int, Rectangle>> shapeHistory;
+        private Dictionary<int, Dictionary<int, Rectangle>> shapeHistory; // Contains the shape at our coordinate system
 
         private Canvas gridGameBoard;
         private Canvas gridPattern;
@@ -38,11 +41,6 @@ namespace Game_Of_Life
         private double cellHeightGameBoard;
         private double cellMargeTopBottom;
         private double cellMargeLeftRight;
-
-        static DisplayEngine()
-        {
-            FACTORS = new int[4, 4] { {0, 0, 0, 2}, {1, 0, 0, 2}, {0, 1, 0, 0}, {0, 1, 2, 0} }; //w = 1, h = 2, for the draw of a cell in gridGameBoard
-        }
 
         public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
         {
@@ -66,11 +64,19 @@ namespace Game_Of_Life
             }
         }
         
+        /// <summary>
+        /// Convert a string color to a Brush
+        /// </summary>
+        /// <param name="color">string color</param>
+        /// <returns>Brush</returns>
         public static Brush BrushFromString(string color)
         {
             return (Brush)(new System.Windows.Media.BrushConverter()).ConvertFromString(color);
         }
 
+        /// <summary>
+        /// Compute the size of a cell depending the size of the grid game board
+        /// </summary>
         public void ComputeSizeCellGameBoard()
         {
             cellWidthGameBoard = (gridGameBoard.ActualWidth - GameEngine.NB_COLS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_COLS_GRID - 0.025;
@@ -93,20 +99,9 @@ namespace Game_Of_Life
             y /= (cellWidthGameBoard + LINE_STROCK_THICKNESS);
         }
 
-
         /// <summary>
-        /// 
+        /// Show the about dialog
         /// </summary>
-        /// <param name="i">Row</param>
-        /// <param name="j">Col</param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        private static double GetFactor(int i, int j, double width, double height)
-        {
-            return (FACTORS[i, j] == 1 ? width : FACTORS[i, j] == 2 ? height : 0);
-        }
-
         public static void ShowAbout()
         {
             MessageBox.Show(@"The game of life is a game created by John Horton Conway in 1970. The game consists in a grid of cells where a cell can have one state among several and then, they live depending 3 rules (Wikipedia) :
@@ -121,17 +116,35 @@ The game generate each step of living and you can see new cells emerging, dying,
 
         #region DisplayEngine Draw
 
+        /// <summary>
+        /// Draw the statistics
+        /// </summary>
+        /// <param name="generation"></param>
+        /// <param name="currentPopAlive"></param>
+        /// <param name="currentPopEmerging"></param>
+        /// <param name="currentPopDying"></param>
+        /// <param name="currentPopDead"></param>
+        /// <param name="totPopEmerged"></param>
+        /// <param name="totPopDead"></param>
+        /// <param name="totPopDying"></param>
         public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead, double totPopEmerged, double totPopDead, double totPopDying)
         {
             lblValue1.Content = currentPopAlive.ToString() + Environment.NewLine + currentPopEmerging.ToString() + Environment.NewLine + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
             lblValue2.Content = generation.ToString() + Environment.NewLine + totPopEmerged.ToString() + Environment.NewLine + totPopDead.ToString() + Environment.NewLine + totPopDying.ToString();
         }
 
+        /// <summary>
+        /// Draw the grid of the game board
+        /// </summary>
         public void DrawGameBoard()
         {
             DrawGrid(gridGameBoard, GameEngine.NB_ROWS_GRID, GameEngine.NB_COLS_GRID, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard);
         }
 
+        /// <summary>
+        /// Draw a pattern
+        /// </summary>
+        /// <param name="pattern"></param>
         public void DrawPattern(PatternRepresentation pattern)
         {
             double nbCols = pattern.Col;
@@ -151,6 +164,16 @@ The game generate each step of living and you can see new cells emerging, dying,
                         DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN, null);
         }
 
+        /// <summary>
+        /// Draw a grid on a canvas
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="nbRows"></param>
+        /// <param name="nbCols"></param>
+        /// <param name="margeTopBottom"></param>
+        /// <param name="margeLeftRight"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         private static void DrawGrid(Canvas canvas, double nbRows, double nbCols, double margeTopBottom, double margeLeftRight, double width, double height)
         {
             canvas.Children.Clear();

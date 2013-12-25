@@ -5,7 +5,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         WindowState="Maximized"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -77,15 +78,10 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     </Grid.ColumnDefinitions>
 
                     <Slider Margin="0 2 0 0"  Name="sliderDelayGeneration" Grid.Column="0" Grid.Row="0" ValueChanged="sliderDelayGeneration_ValueChanged"
-                            Minimum="50" Maximum="1000" TickFrequency="10" IsSnapToTickEnabled="True" Height="20">
-                        <Slider.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkDarkBrushKey}" Color="Silver" />
-                        </Slider.Resources>
+                             TickFrequency="5" IsSnapToTickEnabled="True" Height="20">
                     </Slider>
-                    <TextBox FontWeight="Bold" Background="Transparent" BorderThickness="0" Margin="-10 2 0 0" Grid.Column="1" Grid.Row="0" Name="tbxDelayGeneration" Width="35" Height="18" FontSize="12" TextAlignment="Center" TextChanged="tbxDelayBetweenGeneration_TextChanged">250</TextBox>
-                    <Label FontWeight="Bold" Margin="-40 2 0 0" Grid.Column="2" Grid.Row="0" Padding="0" Name="lblDelayBetweenGeneration" Width="20" Height="20" FontSize="12"  HorizontalContentAlignment="Left" VerticalAlignment="Center">
-                        ms</Label>
+                    <TextBox FontWeight="Bold" Background="Transparent" BorderThickness="0" Margin="-10 2 0 0" Grid.Column="1" Grid.Row="0" Name="tbxDelayGeneration" Width="35" Height="18" FontSize="12" TextAlignment="Center" TextChanged="tbxDelayBetweenGeneration_TextChanged"></TextBox>
+                    <Label FontWeight="Bold" Margin="-35 2 0 0" Grid.Column="2" Grid.Row="0" Padding="0" Name="lblDelayBetweenGeneration" Width="20" Height="20" FontSize="12"  HorizontalContentAlignment="Left" VerticalAlignment="Center">ms</Label>
                 </Grid>
             </Grid>
 

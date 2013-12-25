@@ -14,13 +14,16 @@ using System.Windows.Shapes;
 
 namespace Game_Of_Life
 {
+    /// <summary>
+    /// Class which represents a GameBoard which has no border. It has also the different state of a cell.
+    /// </summary>
     class GameBoard
     {
-        private static readonly Dictionary<State, Brush> STATE_MATCH;
+        private static readonly Dictionary<State, Brush> STATE_MATCH; // match a State to a Brush
         public enum State { Alive, Emerging, Dying, Empty, Dead };
 
-        private int x;//Rows
-        private int y;//Cols
+        private int x; // Rows
+        private int y; // Cols
         private State[,] gameBoard;
 
         static GameBoard()
@@ -33,6 +36,11 @@ namespace Game_Of_Life
             STATE_MATCH.Add(State.Dead, DisplayEngine.BrushFromString("#55FF0000"));
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="x">Rows</param>
+        /// <param name="y">Cols</param>
         public GameBoard(int x, int y)
         {
             if (x < 10 || y < 10)
@@ -46,11 +54,21 @@ namespace Game_Of_Life
                     gameBoard[i, j] = State.Empty;
         }
 
+        /// <summary>
+        /// Define is a cell is "dead", means having a state amoug Empty, Dead & Dying
+        /// </summary>
+        /// <param name="state">Cell's state</param>
+        /// <returns>bool</returns>
         public static bool IsConsideredLikeDead(State state)
         {
             return state == State.Empty || state == State.Dead || state == State.Dying;
         }
 
+        /// <summary>
+        /// Define is a cell is "alive", means having a state amoug Alive & Emerging
+        /// </summary>
+        /// <param name="state">Cell's state</param>
+        /// <returns>bool</returns>
         public static bool IsConsideredLikeAlive(State state)
         {
             return state == State.Alive || state == State.Emerging;
@@ -70,29 +88,42 @@ namespace Game_Of_Life
             }
         }
 
+        /// <summary>
+        /// The GetUpperBound than a simple Array
+        /// </summary>
+        /// <param name="dim">The dimension desired</param>
+        /// <returns>The length</returns>
         public int GetUpperBound(int dim)
         {
             return gameBoard.GetUpperBound(dim);
         }
 
-        private void manageKeys(ref int k1, ref int k2)
-        {
-            if (k1 < 0)
-                k1 += x;
-            if (k2 < 0)
-                k2 += y;
-            if (k1 >= x)
-                k1 -= x;
-            if (k2 >= y)
-                k2 -= y;
-
-            if (k1 >= x || k2 >= y)
-                throw new IndexOutOfRangeException();
-        }
-
+        /// <summary>
+        /// Return the brush corresponding to the cell's state
+        /// </summary>
+        /// <param name="state">Cell's state</param>
+        /// <returns>Brush</returns>
         public static Brush GetRender(State state)
         {
             return STATE_MATCH[state];
+        }
+
+        /// <summary>
+        /// Convert the keys to avoid 
+        /// </summary>
+        /// <param name="k1"></param>
+        /// <param name="k2"></param>
+        private void manageKeys(ref int k1, ref int k2)
+        {
+            if (k1 < 0)
+                k1 = k1 % x + x;
+            if (k2 < 0)
+                k2 = k2 % y + y;
+
+            if (k1 >= x)
+                k1 %= x;
+            if (k2 >= y)
+                k2 %= y;
         }
     }
 }

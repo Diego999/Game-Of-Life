@@ -53,6 +53,10 @@ namespace Game_Of_Life
 
             drawPlayPause(gameEngine.IsInPause);
 
+            sliderDelayGeneration.Minimum = GameEngine.DELAY_MIN;
+            sliderDelayGeneration.Maximum = GameEngine.DELAY_MAX;
+            tbxDelayGeneration.Text = GameEngine.DEFAULT_DELAY.ToString();
+
             lblDelayBetweenGeneration.Foreground = DisplayEngine.COLOR_UP;
             tbxDelayGeneration.Foreground = DisplayEngine.COLOR_UP;
 
@@ -122,9 +126,16 @@ namespace Game_Of_Life
         private void tbxDelayBetweenGeneration_TextChanged(object sender, TextChangedEventArgs e)
         {
             int val;
+            bool hasBeenChanged = false;
             if (int.TryParse(((TextBox)sender).Text, out val))
                 if (val >= sliderDelayGeneration.Minimum && val <= sliderDelayGeneration.Maximum)
+                {
                     sliderDelayGeneration.Value = val;
+                    gameEngine.Delay = val;
+                    hasBeenChanged = true;
+                }
+            tbxDelayGeneration.Background = hasBeenChanged ? DisplayEngine.BACKGROUND_GENERAL : DisplayEngine.WARNING;
+            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -141,6 +152,13 @@ namespace Game_Of_Life
             string t = ((ComboBox)sender).SelectedItem.ToString();
             gameEngine.DisplayEngine.DrawPattern(Patterns.PATTERNS[((ComboBox)sender).SelectedItem.ToString()]);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(!gameEngine.IsInPause)
+                gameEngine.PauseChange();
+        }
+
         #endregion
 
         #region MainWindow MouseLeftButtonDown
@@ -194,8 +212,7 @@ namespace Game_Of_Life
             else
                 pathBtnPause.Fill =  DisplayEngine.COLOR_UP;
             drawPlayPause(gameEngine.IsInPause);
-            gameEngine.GenerateNextStep();
-            gameEngine.Render();
+            gameEngine.Play();
         }
 
         private void btnNextGeneration_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
