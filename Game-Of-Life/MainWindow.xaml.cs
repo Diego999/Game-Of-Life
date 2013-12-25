@@ -34,18 +34,18 @@ namespace Game_Of_Life
 
             gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, tbxValue1);
 
-            pathBtnClean.Fill = DisplayEngine.COLOR_UP;
+            pathBtnClear.Fill = DisplayEngine.COLOR_UP;
             pathBtnNextGeneration.Fill = DisplayEngine.COLOR_UP;
             pathBtnSave.Fill = DisplayEngine.COLOR_UP;
-            pathBtnUpload.Fill = DisplayEngine.COLOR_UP;
+            pathBtnLoad.Fill = DisplayEngine.COLOR_UP;
             pathBtnPlay.Fill = DisplayEngine.COLOR_UP;
             pathBtnPause.Fill = DisplayEngine.COLOR_UP;
             pathBtnInfo.Fill = DisplayEngine.COLOR_UP;
 
-            btnClean.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnClear.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnNextGeneration.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnSave.Background = DisplayEngine.BACKGROUND_GENERAL;
-            btnUpload.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnLoad.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnPlay.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnPause.Background = DisplayEngine.BACKGROUND_GENERAL;
             bntInfo.Background = DisplayEngine.BACKGROUND_GENERAL;
@@ -73,6 +73,9 @@ namespace Game_Of_Life
         {
             btnPause.Visibility = isInPause ? Visibility.Hidden : Visibility.Visible;
             btnPlay.Visibility = isInPause ? Visibility.Visible : Visibility.Hidden;
+            btnNextGeneration.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
+            btnSave.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
+            btnLoad.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void initCombobox()
@@ -174,14 +177,14 @@ namespace Game_Of_Life
             pathBtnNextGeneration.Fill = DisplayEngine.COLOR_DOWN;
         }
 
-        private void btnClean_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void btnClear_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            pathBtnClean.Fill = DisplayEngine.COLOR_DOWN;
+            pathBtnClear.Fill = DisplayEngine.COLOR_DOWN;
         }
 
-        private void btnUpload_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void btnLoad_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            pathBtnUpload.Fill =  DisplayEngine.COLOR_DOWN;
+            pathBtnLoad.Fill =  DisplayEngine.COLOR_DOWN;
         }
 
         private void btnSave_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -216,17 +219,18 @@ namespace Game_Of_Life
         private void btnNextGeneration_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
            pathBtnNextGeneration.Fill =  DisplayEngine.COLOR_UP;
+           gameEngine.RunWork();
         }
 
-        private void btnClean_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void btnClear_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            pathBtnClean.Fill = DisplayEngine.COLOR_UP;
+            pathBtnClear.Fill = DisplayEngine.COLOR_UP;
             gameEngine.Clear();
         }
 
-        private void btnUpload_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void btnLoad_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            pathBtnUpload.Fill =  DisplayEngine.COLOR_UP;
+            pathBtnLoad.Fill =  DisplayEngine.COLOR_UP;
         }
 
         private void btnSave_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
