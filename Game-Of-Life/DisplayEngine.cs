@@ -35,20 +35,18 @@ namespace Game_Of_Life
         private Canvas gridPattern;
         private Canvas gridGameBoardCell;
         private Label lblValue1;
-        private Label lblValue2;
 
         private double cellWidthGameBoard;
         private double cellHeightGameBoard;
         private double cellMargeTopBottom;
         private double cellMargeLeftRight;
 
-        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
+        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1)
         {
             this.gridGameBoardCell = gridGameBoardCell;
             this.gridGameBoard = gridGameBoard;
             this.gridPattern = gridPattern;
             this.lblValue1 = lblValue1;
-            this.lblValue2 = lblValue2;
 
             cellWidthGameBoard = 0;
             cellHeightGameBoard = 0;
@@ -127,10 +125,9 @@ The game generate each step of living and you can see new cells emerging, dying,
         /// <param name="totPopEmerged"></param>
         /// <param name="totPopDead"></param>
         /// <param name="totPopDying"></param>
-        public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead, double totPopEmerged, double totPopDead, double totPopDying)
+        public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead)
         {
-            lblValue1.Content = currentPopAlive.ToString() + Environment.NewLine + currentPopEmerging.ToString() + Environment.NewLine + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
-            lblValue2.Content = generation.ToString() + Environment.NewLine + totPopEmerged.ToString() + Environment.NewLine + totPopDead.ToString() + Environment.NewLine + totPopDying.ToString();
+            lblValue1.Content = generation.ToString() + Environment.NewLine + (currentPopAlive + currentPopEmerging + currentPopDying).ToString() + Environment.NewLine + currentPopEmerging.ToString() + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
         }
 
         /// <summary>
@@ -207,9 +204,9 @@ The game generate each step of living and you can see new cells emerging, dying,
         /// <param name="i">Row</param>
         /// <param name="j">Col</param>
         /// <param name="color"></param>
-        public void DrawCellGameBoard(int i, int j, Brush color)
+        public bool DrawCellGameBoard(int i, int j, Brush color)
         {
-            DrawCell(gridGameBoardCell, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
+            return DrawCell(gridGameBoardCell, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
         }
 
         /// <summary>
@@ -224,7 +221,7 @@ The game generate each step of living and you can see new cells emerging, dying,
         /// <param name="height"></param>
         /// <param name="color"></param>
         /// <param name="shapeHistory"></param>
-        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, Rectangle>> shapeHistory)
+        private static bool DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, Rectangle>> shapeHistory)
         {
             bool isAlreadyIn = false;
             if (shapeHistory != null && shapeHistory[i][j] != null)
@@ -249,6 +246,8 @@ The game generate each step of living and you can see new cells emerging, dying,
                 if (shapeHistory != null)
                     shapeHistory[i][j] = rectangle;
             }
+
+            return !isAlreadyIn;
         }
 
         #endregion

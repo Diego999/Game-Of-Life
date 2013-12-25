@@ -32,7 +32,7 @@ namespace Game_Of_Life
             lastClickX = -10;
             lastClickY = -10;
 
-            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1, lblValue2);
+            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1);
 
             pathBtnClean.Fill = DisplayEngine.COLOR_UP;
             pathBtnNextGeneration.Fill = DisplayEngine.COLOR_UP;
@@ -61,9 +61,7 @@ namespace Game_Of_Life
             tbxDelayGeneration.Foreground = DisplayEngine.COLOR_UP;
 
             lblLegend1.Foreground = DisplayEngine.COLOR_UP;
-            lblLegend2.Foreground = DisplayEngine.COLOR_UP;
             lblValue1.Foreground = DisplayEngine.COLOR_UP;
-            lblValue2.Foreground = DisplayEngine.COLOR_UP;
 
             cbxPattern.Background = Brushes.Transparent;
             cbxPattern.Foreground = DisplayEngine.COLOR_UP;

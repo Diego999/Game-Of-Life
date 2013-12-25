@@ -39,10 +39,6 @@ namespace Game_Of_Life
         private int currentPopAlive;
         private int currentPopEmerging;
 
-        private int totPopDying;
-        private int totPopDead;
-        private int totPopEmerged;
-
         private int delay;
 
         bool isInPause;
@@ -57,26 +53,19 @@ namespace Game_Of_Life
         /// <param name="gridGameBoardCell"></param>
         /// <param name="lblValue1"></param>
         /// <param name="lblValue2"></param>
-        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
+        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1)
         {
-            displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1, lblValue2);
+            displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1);
 
             actionGUI = new Action(RunWork);
 
-            stepGeneration = 0;
             isInPause = true;
             delay = DEFAULT_DELAY;
-            
-            currentPopDying = 0;
-            currentPopDead = 0;
-            currentPopAlive = 0;
-            currentPopEmerging = 0;
 
-            totPopDying = 0;
-            totPopDead = 0;
-            totPopEmerged = 0;
+            gameBoard1 = new GameBoard(NB_ROWS_GRID, NB_COLS_GRID);
+            gameBoard2 = new GameBoard(NB_ROWS_GRID, NB_COLS_GRID);
 
-            Init(NB_ROWS_GRID, NB_COLS_GRID);
+            Init();
         }
 
         /// <summary>
@@ -106,7 +95,11 @@ namespace Game_Of_Life
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
             gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
-            displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y]));
+            if (displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y])))
+            {
+                ++currentPopAlive;
+                displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
+            }
         }
 
         /// <summary>
@@ -152,9 +145,6 @@ namespace Game_Of_Life
                         ++currentPopAlive;
                 }
 
-            totPopEmerged += currentPopEmerging;
-            totPopDying += currentPopDying;
-            totPopDead += currentPopDead;
             GameBoard temp = gameBoard1;
             gameBoard1 = gameBoard2;
             gameBoard2 = temp;
@@ -165,7 +155,7 @@ namespace Game_Of_Life
         /// </summary>
         private void Render()
         {
-            displayEngine.DrawStatistics(stepGeneration, currentPopAlive + currentPopEmerging + currentPopDying, currentPopEmerging, currentPopDying, currentPopDead, totPopEmerged, totPopDead, totPopDying);
+            displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
             
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
@@ -189,12 +179,13 @@ namespace Game_Of_Life
         /// <summary>
         /// Init the statistics
         /// </summary>
-        /// <param name="x">Rows</param>
-        /// <param name="y">Cols</param>
-        private void Init(int x, int y)
+        private void Init()
         {
-            gameBoard1 = new GameBoard(x, y);
-            gameBoard2 = new GameBoard(x, y);
+            stepGeneration = 0;
+            currentPopDying = 0;
+            currentPopDead = 0;
+            currentPopAlive = 0;
+            currentPopEmerging = 0;
 
             for(int i = 0; i < gameBoard1.GetUpperBound(0); ++i)
                 for(int j = 0; j < gameBoard1.GetUpperBound(1); ++j)
@@ -206,10 +197,6 @@ namespace Game_Of_Life
                         ++currentPopDying;
                     else if (gameBoard1[i, j] == GameBoard.State.Emerging)
                         ++currentPopEmerging;
-
-            totPopDead += currentPopDead;
-            totPopDying += currentPopDying;
-            totPopEmerged += currentPopEmerging;
         }
 
         #region GameEngine Get/Set
