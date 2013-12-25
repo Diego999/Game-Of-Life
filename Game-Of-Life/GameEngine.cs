@@ -24,7 +24,7 @@ namespace Game_Of_Life
         public const int NB_ROWS_GRID = 80;
         public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
 
-        public const int DELAY_MIN = 5;
+        public const int DELAY_MIN = 100;
         public const int DEFAULT_DELAY = 250;
         public const int DELAY_MAX = 1000;
 
@@ -47,6 +47,8 @@ namespace Game_Of_Life
 
         bool isInPause;
 
+        private Action actionGUI;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -58,6 +60,8 @@ namespace Game_Of_Life
         public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
         {
             displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1, lblValue2);
+
+            actionGUI = new Action(RunWork);
 
             stepGeneration = 0;
             isInPause = true;
@@ -87,7 +91,7 @@ namespace Game_Of_Life
         /// <summary>
         /// Render then generate a step
         /// </summary>
-        public void RunWok()
+        public void RunWork()
         {
             GenerateNextStep();
             Render();
@@ -113,42 +117,40 @@ namespace Game_Of_Life
             ++stepGeneration;
             currentPopAlive = currentPopDead = currentPopDying = currentPopEmerging = 0;
 
-            Parallel.For(0, gameBoard1.GetUpperBound(0) + 1, i =>
+            for(int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
+                for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
                 {
-                    for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
+                    int neighbors = 0;
+                    for (int ii = -1; ii <= 1; ++ii)
+                        for (int jj = -1; jj <= 1; ++jj)
+                            if (GameBoard.IsConsideredLikeAlive(gameBoard1[i + ii, j + jj]))
+                                ++neighbors;
+                    if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]))
+                        --neighbors;
+
+                    if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]) && (neighbors < 2 || neighbors > 3))
                     {
-                        int neighbors = 0;
-                        for (int ii = -1; ii <= 1; ++ii)
-                            for (int jj = -1; jj <= 1; ++jj)
-                                if (GameBoard.IsConsideredLikeAlive(gameBoard1[i + ii, j + jj]))
-                                    ++neighbors;
-                        if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]))
-                            --neighbors;
-
-                        if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]) && (neighbors < 2 || neighbors > 3))
-                        {
-                            gameBoard2[i, j] = GameBoard.State.Dying;
-                            ++currentPopDying;
-                        }
-                        else if (GameBoard.IsConsideredLikeDead(gameBoard1[i, j]) && neighbors == 3)
-                        {
-                            gameBoard2[i, j] = GameBoard.State.Emerging;
-                            ++currentPopEmerging;
-                        }
-                        else if (gameBoard1[i, j] == GameBoard.State.Dying)
-                        {
-                            gameBoard2[i, j] = GameBoard.State.Dead;
-                            ++currentPopDead;
-                        }
-                        else if (gameBoard1[i, j] == GameBoard.State.Emerging)
-                            gameBoard2[i, j] = GameBoard.State.Alive;
-                        else
-                            gameBoard2[i, j] = gameBoard1[i, j];
-
-                        if (gameBoard2[i, j] == GameBoard.State.Alive)
-                            ++currentPopAlive;
+                        gameBoard2[i, j] = GameBoard.State.Dying;
+                        ++currentPopDying;
                     }
-                });
+                    else if (GameBoard.IsConsideredLikeDead(gameBoard1[i, j]) && neighbors == 3)
+                    {
+                        gameBoard2[i, j] = GameBoard.State.Emerging;
+                        ++currentPopEmerging;
+                    }
+                    else if (gameBoard1[i, j] == GameBoard.State.Dying)
+                    {
+                        gameBoard2[i, j] = GameBoard.State.Dead;
+                        ++currentPopDead;
+                    }
+                    else if (gameBoard1[i, j] == GameBoard.State.Emerging)
+                        gameBoard2[i, j] = GameBoard.State.Alive;
+                    else
+                        gameBoard2[i, j] = gameBoard1[i, j];
+
+                    if (gameBoard2[i, j] == GameBoard.State.Alive)
+                        ++currentPopAlive;
+                }
 
             totPopEmerged += currentPopEmerging;
             totPopDying += currentPopDying;
@@ -165,7 +167,6 @@ namespace Game_Of_Life
         {
             displayEngine.DrawStatistics(stepGeneration, currentPopAlive + currentPopEmerging + currentPopDying, currentPopEmerging, currentPopDying, currentPopDead, totPopEmerged, totPopDead, totPopDying);
             
-
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
                     if(gameBoard1[i, j] != GameBoard.State.Empty)
@@ -180,7 +181,7 @@ namespace Game_Of_Life
             System.Threading.Thread.Sleep(delay);
             while (!isInPause)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() => { RunWok(); }));
+                Application.Current.Dispatcher.Invoke(actionGUI);
                 System.Threading.Thread.Sleep(delay);
             }
         }
