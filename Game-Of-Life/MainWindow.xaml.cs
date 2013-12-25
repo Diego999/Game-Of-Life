@@ -29,37 +29,37 @@ namespace Game_Of_Life
             isMouseDown = false;
             gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1, lblValue2);
 
-            DisplayEngine.SetFill(pathBtnClean, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnNextGeneration, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnSave, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnUpload, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnPlay, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnPause, DisplayEngine.COLOR_UP);
-            DisplayEngine.SetFill(pathBtnInfo, DisplayEngine.COLOR_UP);
+            pathBtnClean.Fill = DisplayEngine.COLOR_UP;
+            pathBtnNextGeneration.Fill = DisplayEngine.COLOR_UP;
+            pathBtnSave.Fill = DisplayEngine.COLOR_UP;
+            pathBtnUpload.Fill = DisplayEngine.COLOR_UP;
+            pathBtnPlay.Fill = DisplayEngine.COLOR_UP;
+            pathBtnPause.Fill = DisplayEngine.COLOR_UP;
+            pathBtnInfo.Fill = DisplayEngine.COLOR_UP;
 
-            DisplayEngine.SetBackground(btnClean, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(btnNextGeneration, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(btnSave, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(btnUpload, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(btnPlay, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(btnPause, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(bntInfo, DisplayEngine.BACKGROUND_GENERAL);
-            DisplayEngine.SetBackground(this, DisplayEngine.BACKGROUND_GENERAL);
+            btnClean.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnNextGeneration.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnSave.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnUpload.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnPlay.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnPause.Background = DisplayEngine.BACKGROUND_GENERAL;
+            bntInfo.Background = DisplayEngine.BACKGROUND_GENERAL;
+            this.Background = DisplayEngine.BACKGROUND_GENERAL;
 
             drawPlayPause(gameEngine.IsInPause);
 
-            this.Background = DisplayEngine.BrushFromString(DisplayEngine.BACKGROUND_GENERAL);
-            cvsGameBoard.Background = DisplayEngine.BrushFromString(DisplayEngine.BACKGROUND_GAMEBOARD);
-            lblDelayBetweenGeneration.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
-            tbxDelayGeneration.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            this.Background = DisplayEngine.BACKGROUND_GENERAL;
+            cvsGameBoard.Background = DisplayEngine.BACKGROUND_GAMEBOARD;
+            lblDelayBetweenGeneration.Foreground = DisplayEngine.COLOR_UP;
+            tbxDelayGeneration.Foreground = DisplayEngine.COLOR_UP;
 
-            lblLegend1.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
-            lblLegend2.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
-            lblValue1.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
-            lblValue2.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            lblLegend1.Foreground = DisplayEngine.COLOR_UP;
+            lblLegend2.Foreground = DisplayEngine.COLOR_UP;
+            lblValue1.Foreground = DisplayEngine.COLOR_UP;
+            lblValue2.Foreground = DisplayEngine.COLOR_UP;
 
             cbxPattern.Background = Brushes.Transparent;
-            cbxPattern.Foreground = DisplayEngine.BrushFromString(DisplayEngine.COLOR_UP);
+            cbxPattern.Foreground = DisplayEngine.COLOR_UP;
             cbxPattern.Resources.Add(SystemColors.WindowBrushKey, Brushes.Transparent);
             initCombobox();
         }
@@ -86,19 +86,23 @@ namespace Game_Of_Life
 
         private void cvsGameBoard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            isMouseDown = true;
-            ClickCell(e.GetPosition((Canvas)sender));
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                isMouseDown = true;
+                ClickCell(e.GetPosition((Canvas)sender));
+            }
         }
 
         private void cvsGameBoard_MouseMove(object sender, MouseEventArgs e)
         {
-            if(isMouseDown)
+            if (isMouseDown && e.LeftButton == MouseButtonState.Pressed)
                 ClickCell(e.GetPosition((Canvas)sender));
         }
 
         private void cvsGameBoard_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            isMouseDown = false;
+            if(e.LeftButton == MouseButtonState.Pressed)
+                isMouseDown = false;
         }
 
         private void sliderDelayGeneration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -136,35 +140,35 @@ namespace Game_Of_Life
         private void btnPlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (gameEngine.IsInPause)
-                DisplayEngine.SetFill(pathBtnPlay, DisplayEngine.COLOR_DOWN);
+                pathBtnPlay.Fill = DisplayEngine.COLOR_DOWN;
             else
-                DisplayEngine.SetFill(pathBtnPause, DisplayEngine.COLOR_DOWN);
+                pathBtnPause.Fill = DisplayEngine.COLOR_DOWN;
             gameEngine.PauseChange();
         }
 
         private void btnNextGeneration_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnNextGeneration, DisplayEngine.COLOR_DOWN);
+            pathBtnNextGeneration.Fill = DisplayEngine.COLOR_DOWN;
         }
 
         private void btnClean_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnClean, DisplayEngine.COLOR_DOWN);
+            pathBtnClean.Fill = DisplayEngine.COLOR_DOWN;
         }
 
         private void btnUpload_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnUpload, DisplayEngine.COLOR_DOWN);
+            pathBtnUpload.Fill =  DisplayEngine.COLOR_DOWN;
         }
 
         private void btnSave_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnSave, DisplayEngine.COLOR_DOWN);
+            pathBtnSave.Fill = DisplayEngine.COLOR_DOWN;
         }
 
         private void bntInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnInfo, DisplayEngine.COLOR_DOWN);
+            pathBtnInfo.Fill = DisplayEngine.COLOR_DOWN;
         }
 
         #endregion
@@ -172,37 +176,39 @@ namespace Game_Of_Life
         #region Mainwindow MouseLeftButtonUp
         private void bntInfo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnInfo, DisplayEngine.COLOR_UP);
+            pathBtnInfo.Fill = DisplayEngine.COLOR_UP;
             DisplayEngine.ShowAbout();
         }
 
         private void btnPlay_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (gameEngine.IsInPause)
-                DisplayEngine.SetFill(pathBtnPlay, DisplayEngine.COLOR_UP);
+                pathBtnPlay.Fill =  DisplayEngine.COLOR_UP;
             else
-                DisplayEngine.SetFill(pathBtnPause, DisplayEngine.COLOR_UP);
+                pathBtnPause.Fill =  DisplayEngine.COLOR_UP;
             drawPlayPause(gameEngine.IsInPause);
+            gameEngine.GenerateNextStep();
+            gameEngine.Render();
         }
 
         private void btnNextGeneration_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnNextGeneration, DisplayEngine.COLOR_UP);
+           pathBtnNextGeneration.Fill =  DisplayEngine.COLOR_UP;
         }
 
         private void btnClean_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnClean, DisplayEngine.COLOR_UP);
+            pathBtnClean.Fill = DisplayEngine.COLOR_UP;
         }
 
         private void btnUpload_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnUpload, DisplayEngine.COLOR_UP);
+            pathBtnUpload.Fill =  DisplayEngine.COLOR_UP;
         }
 
         private void btnSave_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DisplayEngine.SetFill(pathBtnSave, DisplayEngine.COLOR_UP);
+            pathBtnSave.Fill =  DisplayEngine.COLOR_UP;
         }
         #endregion
     }

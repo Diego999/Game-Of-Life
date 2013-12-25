@@ -17,11 +17,11 @@ namespace Game_Of_Life
 {
     class DisplayEngine
     {
-        public static readonly string COLOR_UP = "#FF555555";
-        public static readonly string COLOR_DOWN = "#FF222222";
-        public static readonly string BACKGROUD_COLOR_BUTTON = "#00000000";
-        public static readonly string BACKGROUND_GENERAL = "#FF111111";
-        public static readonly string BACKGROUND_GAMEBOARD = "#FF111111";
+        public static readonly Brush COLOR_UP = BrushFromString("#FF555555");
+        public static readonly Brush COLOR_DOWN = BrushFromString("#FF222222");
+        public static readonly Brush BACKGROUD_COLOR_BUTTON = BrushFromString("#00000000");
+        public static readonly Brush BACKGROUND_GENERAL = BrushFromString("#FF111111");
+        public static readonly Brush BACKGROUND_GAMEBOARD = BrushFromString("#FF111111");
 
         private static readonly int LINE_STROCK_THICKNESS = 1;
         private static readonly int[,] FACTORS;
@@ -58,10 +58,10 @@ namespace Game_Of_Life
             cellMargeLeftRight = 0;
 
             shapeHistory = new Dictionary<int, Dictionary<int, List<UIElement>>>();
-            for (int i = 0; i < GameEngine.NB_ROWS_GRID; ++i)
+            for (int i = 0; i < GameEngine.NB_COLS_GRID; ++i)
             {
                 shapeHistory[i] = new Dictionary<int, List<UIElement>>();
-                for (int j = 0; j < GameEngine.NB_COLS_GRID; ++j)
+                for (int j = 0; j < GameEngine.NB_ROWS_GRID; ++j)
                     shapeHistory[i][j] = new List<UIElement>();
             }
         }
@@ -72,21 +72,6 @@ namespace Game_Of_Life
             cellHeightGameBoard = (gridGameBoard.ActualHeight - GameEngine.NB_ROWS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_ROWS_GRID - 0.025;
             cellMargeTopBottom = (gridGameBoard.ActualHeight - (int)GameEngine.NB_ROWS_GRID * (cellHeightGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
             cellMargeLeftRight = (gridGameBoard.ActualWidth - (int)GameEngine.NB_COLS_GRID * (cellWidthGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
-        }
-
-        public static void SetBackground(Control control, string color)
-        {
-            control.Background = BrushFromString(color);
-        }
-
-        public static void SetBackground(Panel panel, string color)
-        {
-            panel.Background = BrushFromString(color);
-        }
-
-        public static void SetFill(Shape shape, string color)
-        {
-            shape.Fill = BrushFromString(color);
         }
 
         public static Brush BrushFromString(string color)
@@ -137,7 +122,7 @@ namespace Game_Of_Life
             for (int i = 0; i <= (int)nbCols; ++i)
             {
                 Line line = new Line();
-                line.Stroke = BrushFromString(COLOR_UP);
+                line.Stroke = COLOR_UP;
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
                 line.X1 = margeLeftRight + i * width + (i + 1) * LINE_STROCK_THICKNESS;
                 line.X2 = line.X1;
@@ -148,7 +133,7 @@ namespace Game_Of_Life
             for (int i = 0; i <= (int)nbRows; ++i)
             {
                 Line line = new Line();
-                line.Stroke = BrushFromString(COLOR_UP);
+                line.Stroke = COLOR_UP;
                 line.StrokeThickness = LINE_STROCK_THICKNESS;
                 line.X1 = margeLeftRight + LINE_STROCK_THICKNESS;
                 line.X2 = canvas.ActualWidth - margeLeftRight;
@@ -163,19 +148,19 @@ namespace Game_Of_Life
             gridGameBoardCell.Children.Clear();
         }
 
-        public void DrawCellGameBoard(int i, int j, Cell cell)
+        public void DrawCellGameBoard(int i, int j, Brush color)
         {
-            DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, cell.GetRender(), shapeHistory);
+            DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
         }
 
-        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, string color, Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory = null)
+        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory = null)
         {
             if(shapeHistory != null)
                 foreach (UIElement ui in shapeHistory[i][j])
                     canvas.Children.Remove(ui);
 
             Rectangle rectangle = new Rectangle();
-            rectangle.Fill = BrushFromString(color);
+            rectangle.Fill = color;
             rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
             rectangle.Width = width;
             rectangle.Height = height;
@@ -190,7 +175,7 @@ namespace Game_Of_Life
             for(int ii = 0; ii <= FACTORS.GetUpperBound(1); ++ii)
             {
                 Line line = new Line();
-                line.Stroke = BrushFromString(COLOR_UP);
+                line.Stroke = COLOR_UP;
                 line.StrokeThickness = LINE_STROCK_THICKNESS/2.0;
                 line.X1 = left + GetFactor(ii, 0, width, height);
                 line.X2 = line.X1 + GetFactor(ii, 1, width, height);

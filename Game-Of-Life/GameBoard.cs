@@ -3,14 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace Game_Of_Life
 {
     class GameBoard
     {
+        private static readonly Dictionary<State, Brush> STATE_MATCH;
+        public enum State { Alive, Emerging, Dying, Empty, Dead };
+
         private int x;
         private int y;
-        private Cell[,] gameBoard;
+        private State[,] gameBoard;
+
+        static GameBoard()
+        {
+            STATE_MATCH = new Dictionary<State, Brush>();
+            STATE_MATCH.Add(State.Alive, DisplayEngine.BrushFromString("#7700AA00"));
+            STATE_MATCH.Add(State.Emerging, DisplayEngine.BrushFromString("#7700CCCC"));
+            STATE_MATCH.Add(State.Empty, DisplayEngine.BrushFromString("#FF111111"));
+            STATE_MATCH.Add(State.Dying, DisplayEngine.BrushFromString("#77FF0000"));
+            STATE_MATCH.Add(State.Dead, DisplayEngine.BrushFromString("#55FF0000"));
+        }
 
         public GameBoard(int x, int y)
         {
@@ -19,13 +40,23 @@ namespace Game_Of_Life
 
             this.x = x;
             this.y = y;
-            gameBoard = new Cell[x, y];
+            gameBoard = new State[x, y];
             for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                    gameBoard[i, j] = new Cell();
+                    gameBoard[i, j] = State.Empty;
         }
 
-        public Cell this[int k1, int k2]
+        public static bool IsConsideredLikeDead(State state)
+        {
+            return state == State.Empty || state == State.Dead || state == State.Dying;
+        }
+
+        public static bool IsConsideredLikeAlive(State state)
+        {
+            return state == State.Alive || state == State.Emerging;
+        }
+
+        public State this[int k1, int k2]
         {
             get
             {
@@ -57,6 +88,11 @@ namespace Game_Of_Life
 
             if (k1 >= x || k2 >= y)
                 throw new IndexOutOfRangeException();
+        }
+
+        public static Brush GetRender(State state)
+        {
+            return STATE_MATCH[state];
         }
     }
 }
