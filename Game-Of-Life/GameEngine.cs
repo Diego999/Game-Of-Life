@@ -100,13 +100,25 @@ namespace Game_Of_Life
         /// </summary>
         /// <param name="x">Row</param>
         /// <param name="y">Col</param>
-        public void ClickCell(double x, double y)
+        public void AddRemobeCellGlobalCoordinate(double x, double y, bool add = true)
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
-            gameBoard1[(int)x, (int)y] = gameBoard2[(int)x, (int)y] = GameBoard.State.Alive;
+            GameBoard.State oldState = gameBoard1[(int)x, (int)y];
+            gameBoard1[(int)x, (int)y] = gameBoard2[(int)x, (int)y] = add ? GameBoard.State.Alive : GameBoard.State.Empty;
             if (displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y])))
             {
-                ++currentPopAlive;
+                if (add)
+                    ++currentPopAlive;
+
+                if (oldState == GameBoard.State.Emerging)
+                    --currentPopEmerging;
+                else if (oldState == GameBoard.State.Dying)
+                    --currentPopDying;
+                else if (oldState == GameBoard.State.Dead)
+                    --currentPopDead;
+                else if (!add && oldState == GameBoard.State.Alive)
+                    --currentPopAlive;
+
                 displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
             }
         }
@@ -133,6 +145,7 @@ namespace Game_Of_Life
                     );
             }
             Task.WaitAll(tasks);
+            Init();
             Render();
         }
 

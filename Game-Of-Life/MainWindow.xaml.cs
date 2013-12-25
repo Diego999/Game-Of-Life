@@ -21,14 +21,16 @@ namespace Game_Of_Life
     public partial class MainWindow : Window
     {
         private GameEngine gameEngine;
-        private bool isMouseDown;
+        private bool isMouseDownLeft;
+        private bool isMouseDownRight;
         private int lastClickX; //Rows
         private int lastClickY; //Cols
         public MainWindow()
         {
             InitializeComponent();
             
-            isMouseDown = false;
+            isMouseDownLeft = false;
+            isMouseDownRight = false;
             lastClickX = -10;
             lastClickY = -10;
 
@@ -89,35 +91,44 @@ namespace Game_Of_Life
 
         #region MainWindow Miscellaneous event handler
 
-        private void ClickCell(Point p)
+        private void AddRemoveCell(Point p, bool add = true)
         {
             if (p.Y < cvsGameBoard.ActualHeight - 1 && p.Y > 1 && p.X > 1 && p.X < cvsGameBoard.ActualWidth && lastClickX != (int)p.Y && lastClickY != (int)p.X)
             {
-                gameEngine.ClickCell(p.Y, p.X);
+                gameEngine.AddRemobeCellGlobalCoordinate(p.Y, p.X, add);
                 lastClickY = (int)p.X;
                 lastClickY = (int)p.Y;
             }
         }
 
-        private void cvsGameBoard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void cvsGameBoard_MouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                isMouseDown = true;
-                ClickCell(e.GetPosition((Canvas)sender));
+                isMouseDownLeft = true;
+                AddRemoveCell(e.GetPosition((Canvas)sender));
+            }
+            if(e.RightButton == MouseButtonState.Pressed)
+            {
+                isMouseDownRight = true;
+                AddRemoveCell(e.GetPosition((Canvas)sender), false);
             }
         }
 
         private void cvsGameBoard_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isMouseDown && e.LeftButton == MouseButtonState.Pressed)
-                ClickCell(e.GetPosition((Canvas)sender));
+            if (isMouseDownLeft && e.LeftButton == MouseButtonState.Pressed)
+                AddRemoveCell(e.GetPosition((Canvas)sender));
+            if (isMouseDownRight && e.RightButton == MouseButtonState.Pressed)
+                AddRemoveCell(e.GetPosition((Canvas)sender), false);
         }
 
-        private void cvsGameBoard_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void cvsGameBoard_MouseButtonUp(object sender, MouseButtonEventArgs e)
         {
             if(e.LeftButton == MouseButtonState.Pressed)
-                isMouseDown = false;
+                isMouseDownLeft = false;
+            if (e.RightButton == MouseButtonState.Pressed)
+                isMouseDownRight = false;
         }
 
         private void sliderDelayGeneration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

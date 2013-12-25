@@ -18,7 +18,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         <Canvas ZIndex="9" Grid.Column="0" Grid.Row="0" Name="cvsGameBoardCell" >
 
         </Canvas>
-        <Canvas Background="Transparent" ZIndex="10" Grid.Column="0" Grid.Row="0" Name="cvsGameBoard" MouseLeftButtonDown="cvsGameBoard_MouseLeftButtonDown" MouseMove="cvsGameBoard_MouseMove" MouseLeftButtonUp="cvsGameBoard_MouseLeftButtonUp">
+        <Canvas Background="Transparent" ZIndex="10" Grid.Column="0" Grid.Row="0" Name="cvsGameBoard" MouseLeftButtonDown="cvsGameBoard_MouseButtonDown" MouseRightButtonDown="cvsGameBoard_MouseButtonDown" MouseMove="cvsGameBoard_MouseMove" MouseLeftButtonUp="cvsGameBoard_MouseButtonUp" MouseRightButtonUp="cvsGameBoard_MouseButtonUp">
 
         </Canvas>
         
