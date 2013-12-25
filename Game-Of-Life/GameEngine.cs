@@ -17,7 +17,7 @@ namespace Game_Of_Life
 {
     class GameEngine
     {
-        public const int NB_ROWS_GRID = 10;
+        public const int NB_ROWS_GRID = 80;
         public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
 
         private GameBoard gameBoard1;
@@ -69,40 +69,42 @@ namespace Game_Of_Life
             ++stepGeneration;
             currentPopAlive = currentPopDead = currentPopDying = currentPopEmerging = 0;
 
-            for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
-                for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
+            Parallel.For(0, gameBoard1.GetUpperBound(0) + 1, i =>
                 {
-                    int neighbors = 0;
-                    for (int ii = -1; ii <= 1; ++ii)
-                        for (int jj = -1; jj <= 1; ++jj)
-                            if (GameBoard.IsConsideredLikeAlive(gameBoard1[i + ii, j + jj]))
-                                ++neighbors;
-                    if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]))
-                        --neighbors;
+                    for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
+                    {
+                        int neighbors = 0;
+                        for (int ii = -1; ii <= 1; ++ii)
+                            for (int jj = -1; jj <= 1; ++jj)
+                                if (GameBoard.IsConsideredLikeAlive(gameBoard1[i + ii, j + jj]))
+                                    ++neighbors;
+                        if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]))
+                            --neighbors;
 
-                    if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]) && (neighbors < 2 || neighbors > 3))
-                    {
-                        gameBoard2[i, j] = GameBoard.State.Dying;
-                        ++currentPopDying;
-                    }
-                    else if (GameBoard.IsConsideredLikeDead(gameBoard1[i, j]) && neighbors == 3)
-                    {
-                        gameBoard2[i, j] = GameBoard.State.Emerging;
-                        ++currentPopEmerging;
-                    }
-                    else if (gameBoard1[i, j] == GameBoard.State.Dying)
-                    {
-                        gameBoard2[i, j] = GameBoard.State.Dead;
-                        ++currentPopDead;
-                    }
-                    else if (gameBoard1[i, j] == GameBoard.State.Emerging)
-                        gameBoard2[i, j] = GameBoard.State.Alive;
-                    else
-                        gameBoard2[i, j] = gameBoard1[i, j];
+                        if (GameBoard.IsConsideredLikeAlive(gameBoard1[i, j]) && (neighbors < 2 || neighbors > 3))
+                        {
+                            gameBoard2[i, j] = GameBoard.State.Dying;
+                            ++currentPopDying;
+                        }
+                        else if (GameBoard.IsConsideredLikeDead(gameBoard1[i, j]) && neighbors == 3)
+                        {
+                            gameBoard2[i, j] = GameBoard.State.Emerging;
+                            ++currentPopEmerging;
+                        }
+                        else if (gameBoard1[i, j] == GameBoard.State.Dying)
+                        {
+                            gameBoard2[i, j] = GameBoard.State.Dead;
+                            ++currentPopDead;
+                        }
+                        else if (gameBoard1[i, j] == GameBoard.State.Emerging)
+                            gameBoard2[i, j] = GameBoard.State.Alive;
+                        else
+                            gameBoard2[i, j] = gameBoard1[i, j];
 
-                    if (gameBoard2[i, j] == GameBoard.State.Alive)
-                        ++currentPopAlive;
-                }
+                        if (gameBoard2[i, j] == GameBoard.State.Alive)
+                            ++currentPopAlive;
+                    }
+                });
 
             totPopEmerged += currentPopEmerging;
             totPopDying += currentPopDying;
@@ -128,10 +130,10 @@ namespace Game_Of_Life
         {
             displayEngine.DrawStatistics(stepGeneration, currentPopAlive + currentPopEmerging + currentPopDying, currentPopEmerging, currentPopDying, currentPopDead, totPopEmerged, totPopDead, totPopDying);
 
-            displayEngine.ClearGameBoardCells();
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
-                    displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
+                    if(gameBoard1[i, j] != GameBoard.State.Empty)
+                        displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
         }
 
         private void Init(int x, int y)

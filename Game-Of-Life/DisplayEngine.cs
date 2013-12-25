@@ -26,7 +26,7 @@ namespace Game_Of_Life
         private static readonly int LINE_STROCK_THICKNESS = 1;
         private static readonly int[,] FACTORS;
 
-        private Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory;
+        private Dictionary<int, Dictionary<int, Rectangle>> shapeHistory;
 
         private Canvas gridGameBoard;
         private Canvas gridPattern;
@@ -57,13 +57,18 @@ namespace Game_Of_Life
             cellMargeTopBottom = 0;
             cellMargeLeftRight = 0;
 
-            shapeHistory = new Dictionary<int, Dictionary<int, List<UIElement>>>();
+            shapeHistory = new Dictionary<int, Dictionary<int, Rectangle>>();
             for (int i = 0; i < GameEngine.NB_ROWS_GRID; ++i)
             {
-                shapeHistory[i] = new Dictionary<int, List<UIElement>>();
+                shapeHistory[i] = new Dictionary<int, Rectangle>();
                 for (int j = 0; j < GameEngine.NB_COLS_GRID; ++j)
-                    shapeHistory[i][j] = new List<UIElement>();
+                    shapeHistory[i][j] = null;
             }
+        }
+        
+        public static Brush BrushFromString(string color)
+        {
+            return (Brush)(new System.Windows.Media.BrushConverter()).ConvertFromString(color);
         }
 
         public void ComputeSizeCellGameBoard()
@@ -73,11 +78,6 @@ namespace Game_Of_Life
 
             cellMargeLeftRight = (gridGameBoard.ActualWidth - (int)GameEngine.NB_COLS_GRID * (cellWidthGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
             cellMargeTopBottom = (gridGameBoard.ActualHeight - (int)GameEngine.NB_ROWS_GRID * (cellHeightGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
-        }
-
-        public static Brush BrushFromString(string color)
-        {
-            return (Brush)(new System.Windows.Media.BrushConverter()).ConvertFromString(color);
         }
 
         /// <summary>
@@ -92,6 +92,34 @@ namespace Game_Of_Life
             y -= cellMargeLeftRight;
             y /= (cellWidthGameBoard + LINE_STROCK_THICKNESS);
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i">Row</param>
+        /// <param name="j">Col</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        private static double GetFactor(int i, int j, double width, double height)
+        {
+            return (FACTORS[i, j] == 1 ? width : FACTORS[i, j] == 2 ? height : 0);
+        }
+
+        public static void ShowAbout()
+        {
+            MessageBox.Show(@"The game of life is a game created by John Horton Conway in 1970. The game consists in a grid of cells where a cell can have one state among several and then, they live depending 3 rules (Wikipedia) :
+
+1) Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+2) Any live cell with two or three live neighbours lives on to the next generation.
+3) Any live cell with more than three live neighbours dies, as if by overcrowding.
+4) Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+The game generate each step of living and you can see new cells emerging, dying, dead or alive.", "About Game Of Life", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        #region DisplayEngine Draw
 
         public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead, double totPopEmerged, double totPopDead, double totPopDying)
         {
@@ -120,7 +148,7 @@ namespace Game_Of_Life
             for (int i = 0; i < pattern.Row; ++i)
                 for (int j = 0; j < pattern.Col; ++j)
                     if (pattern[i, j] == PatternRepresentation.ALIVE)
-                        DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN);
+                        DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN, null);
         }
 
         private static void DrawGrid(Canvas canvas, double nbRows, double nbCols, double margeTopBottom, double margeLeftRight, double width, double height)
@@ -150,11 +178,6 @@ namespace Game_Of_Life
             }
         }
 
-        public void ClearGameBoardCells()
-        {
-            gridGameBoardCell.Children.Clear();
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -163,7 +186,7 @@ namespace Game_Of_Life
         /// <param name="color"></param>
         public void DrawCellGameBoard(int i, int j, Brush color)
         {
-            DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
+            DrawCell(gridGameBoardCell, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
         }
 
         /// <summary>
@@ -178,67 +201,34 @@ namespace Game_Of_Life
         /// <param name="height"></param>
         /// <param name="color"></param>
         /// <param name="shapeHistory"></param>
-        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory = null)
+        private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, Rectangle>> shapeHistory)
         {
-            if(shapeHistory != null)
-                foreach (UIElement ui in shapeHistory[i][j])
-                    canvas.Children.Remove(ui);
+            bool isAlreadyIn = false;
+            if (shapeHistory != null && shapeHistory[i][j] != null)
+                isAlreadyIn = shapeHistory[i][j].Fill == color;
 
-            Rectangle rectangle = new Rectangle();
-            rectangle.Fill = color;
-            rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
-
-            rectangle.Width = width;
-            rectangle.Height = height;
-            
-            double top = margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height;
-            double left = margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width;
-            
-            Canvas.SetTop(rectangle, top);
-            Canvas.SetLeft(rectangle, left);
-            
-            canvas.Children.Add(rectangle);
-            if (shapeHistory != null)
-                shapeHistory[i][j].Add(rectangle);
-
-            for(int ii = 0; ii <= FACTORS.GetUpperBound(1); ++ii)
+            if (!isAlreadyIn)
             {
-                Line line = new Line();
-                line.Stroke = COLOR_UP;
-                line.StrokeThickness = LINE_STROCK_THICKNESS/2.0;
-                line.X1 = left + GetFactor(ii, 0, width, height);
-                line.X2 = line.X1 + GetFactor(ii, 1, width, height);
-                line.Y1 = top + GetFactor(ii, 2, width, height);
-                line.Y2 = line.Y1 + GetFactor(ii, 3, width, height);
-                canvas.Children.Add(line);
+                if(shapeHistory != null)
+                    canvas.Children.Remove(shapeHistory[i][j]);
+                double top = margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height;
+                double left = margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width;
+
+                Rectangle rectangle = new Rectangle();
+                rectangle.Fill = color;
+                rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
+                rectangle.Width = width;
+                rectangle.Height = height;
+                Canvas.SetTop(rectangle, top);
+                Canvas.SetLeft(rectangle, left);
+                canvas.Children.Add(rectangle);
+                
                 if (shapeHistory != null)
-                    shapeHistory[i][j].Add(line);
+                    shapeHistory[i][j] = rectangle;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="i">Row</param>
-        /// <param name="j">Col</param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        private static double GetFactor(int i, int j, double width, double height)
-        {
-            return (FACTORS[i, j] == 1 ? width : FACTORS[i, j] == 2 ? height : 0);
-        }
+        #endregion
 
-        public static void ShowAbout()
-        {
-            MessageBox.Show(@"The game of life is a game created by John Horton Conway in 1970. The game consists in a grid of cells where a cell can have one state among several and then, they live depending 3 rules (Wikipedia) :
-
-1) Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-2) Any live cell with two or three live neighbours lives on to the next generation.
-3) Any live cell with more than three live neighbours dies, as if by overcrowding.
-4) Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-
-The game generate each step of living and you can see new cells emerging, dying, dead or alive.", "About Game Of Life", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
     }
 }

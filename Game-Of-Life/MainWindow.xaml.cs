@@ -53,8 +53,6 @@ namespace Game_Of_Life
 
             drawPlayPause(gameEngine.IsInPause);
 
-            this.Background = DisplayEngine.BACKGROUND_GENERAL;
-            cvsGameBoard.Background = DisplayEngine.BACKGROUND_GAMEBOARD;
             lblDelayBetweenGeneration.Foreground = DisplayEngine.COLOR_UP;
             tbxDelayGeneration.Foreground = DisplayEngine.COLOR_UP;
 
