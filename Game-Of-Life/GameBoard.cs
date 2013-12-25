@@ -49,9 +49,7 @@ namespace Game_Of_Life
             this.x = x;
             this.y = y;
             gameBoard = new State[x, y];
-            for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
-                for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
-                    gameBoard[i, j] = State.Empty;
+            Init();
         }
 
         /// <summary>
@@ -72,6 +70,16 @@ namespace Game_Of_Life
         public static bool IsConsideredLikeAlive(State state)
         {
             return state == State.Alive || state == State.Emerging;
+        }
+
+        /// <summary>
+        /// Initialize the game board to empty state
+        /// </summary>
+        public void Init()
+        {
+            for (int i = 0; i <= gameBoard.GetUpperBound(0); ++i)
+                for (int j = 0; j <= gameBoard.GetUpperBound(1); ++j)
+                    gameBoard[i, j] = State.Empty;
         }
 
         public State this[int k1, int k2]

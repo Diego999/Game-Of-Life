@@ -92,16 +92,12 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     <RowDefinition Height="90" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="130" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
 
-                <Label VerticalAlignment="Center" Name="lblLegend1" FontWeight="Bold" Grid.Column="0" Grid.Row="0">
-                    <TextBlock FontWeight="Bold" Margin="0 -10 0 0">Generation :<LineBreak/>Alive Cells :<LineBreak/>Emerging Cells :<LineBreak/>Dying Cells :<LineBreak/>Dead Cells :</TextBlock>
-                </Label>
-                <Label VerticalAlignment="Center" Name="lblValue1" Grid.Column="1" Grid.Row="0">
-                    <TextBlock FontWeight="Bold" Margin="0 -10 0 0">0<LineBreak/>0<LineBreak/>0<LineBreak/>0<LineBreak/>0</TextBlock>
-                </Label>
+                 <TextBlock VerticalAlignment="Center" TextAlignment="Right" Name="tbxLegend1" FontWeight="Bold" Grid.Column="0" Grid.Row="0" Margin="0 -10 0 0">Generation  <LineBreak/>Alive Cells  <LineBreak/>Emerging Cells  <LineBreak/>Dying Cells  <LineBreak/>Dead Cells  </TextBlock>
+                <TextBlock VerticalAlignment="Center" TextAlignment="Left" Name="tbxValue1" Grid.Column="1" Grid.Row="0" FontWeight="Bold" Margin="10 -10 0 0">0<LineBreak/>0<LineBreak/>0<LineBreak/>0<LineBreak/>0</TextBlock>
             </Grid>
 
             <Grid Grid.Column="4" Grid.Row="0">

@@ -21,12 +21,12 @@ namespace Game_Of_Life
     /// </summary>
     class GameEngine
     {
-        public const int NB_ROWS_GRID = 80;
+        public const int NB_ROWS_GRID = 60;
         public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
 
         public const int DELAY_MIN = 100;
         public const int DEFAULT_DELAY = 250;
-        public const int DELAY_MAX = 1000;
+        public const int DELAY_MAX = 5000;
 
         private GameBoard gameBoard1;
         private GameBoard gameBoard2;
@@ -53,7 +53,7 @@ namespace Game_Of_Life
         /// <param name="gridGameBoardCell"></param>
         /// <param name="lblValue1"></param>
         /// <param name="lblValue2"></param>
-        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1)
+        public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, TextBlock lblValue1)
         {
             displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1);
 
@@ -94,12 +94,31 @@ namespace Game_Of_Life
         public void ClickCell(double x, double y)
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
-            gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
+            gameBoard1[(int)x, (int)y] = gameBoard2[(int)x, (int)y] = GameBoard.State.Alive;
             if (displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y])))
             {
                 ++currentPopAlive;
                 displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
             }
+        }
+
+        /// <summary>
+        /// Clear the current game board
+        /// </summary>
+        public void Clear()
+        {
+            bool oldValue = isInPause;
+            isInPause = true;
+
+            displayEngine.ClearCell();
+            gameBoard1.Init();
+            gameBoard2.Init();
+            Init();
+            displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
+
+            isInPause = oldValue;
+            if (!isInPause)
+                Play();
         }
 
         /// <summary>

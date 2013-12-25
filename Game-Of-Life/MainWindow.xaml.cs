@@ -32,7 +32,7 @@ namespace Game_Of_Life
             lastClickX = -10;
             lastClickY = -10;
 
-            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1);
+            gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, tbxValue1);
 
             pathBtnClean.Fill = DisplayEngine.COLOR_UP;
             pathBtnNextGeneration.Fill = DisplayEngine.COLOR_UP;
@@ -60,8 +60,8 @@ namespace Game_Of_Life
             lblDelayBetweenGeneration.Foreground = DisplayEngine.COLOR_UP;
             tbxDelayGeneration.Foreground = DisplayEngine.COLOR_UP;
 
-            lblLegend1.Foreground = DisplayEngine.COLOR_UP;
-            lblValue1.Foreground = DisplayEngine.COLOR_UP;
+            tbxLegend1.Foreground = DisplayEngine.COLOR_UP;
+            tbxValue1.Foreground = DisplayEngine.COLOR_UP;
 
             cbxPattern.Background = Brushes.Transparent;
             cbxPattern.Foreground = DisplayEngine.COLOR_UP;
@@ -221,6 +221,7 @@ namespace Game_Of_Life
         private void btnClean_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             pathBtnClean.Fill = DisplayEngine.COLOR_UP;
+            gameEngine.Clear();
         }
 
         private void btnUpload_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

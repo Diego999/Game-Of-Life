@@ -34,14 +34,14 @@ namespace Game_Of_Life
         private Canvas gridGameBoard;
         private Canvas gridPattern;
         private Canvas gridGameBoardCell;
-        private Label lblValue1;
+        private TextBlock lblValue1;
 
         private double cellWidthGameBoard;
         private double cellHeightGameBoard;
         private double cellMargeTopBottom;
         private double cellMargeLeftRight;
 
-        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1)
+        public DisplayEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, TextBlock lblValue1)
         {
             this.gridGameBoardCell = gridGameBoardCell;
             this.gridGameBoard = gridGameBoard;
@@ -127,7 +127,7 @@ The game generate each step of living and you can see new cells emerging, dying,
         /// <param name="totPopDying"></param>
         public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead)
         {
-            lblValue1.Content = generation.ToString() + Environment.NewLine + (currentPopAlive + currentPopEmerging + currentPopDying).ToString() + Environment.NewLine + currentPopEmerging.ToString() + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
+            lblValue1.Text = generation.ToString() + Environment.NewLine + (currentPopAlive + currentPopEmerging + currentPopDying).ToString() + Environment.NewLine + currentPopEmerging.ToString() + Environment.NewLine + currentPopDying.ToString() + Environment.NewLine + currentPopDead.ToString();
         }
 
         /// <summary>
@@ -159,6 +159,17 @@ The game generate each step of living and you can see new cells emerging, dying,
                 for (int j = 0; j < pattern.Col; ++j)
                     if (pattern[i, j] == PatternRepresentation.ALIVE)
                         DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN, null);
+        }
+
+        /// <summary>
+        /// Clear the cells of the game board
+        /// </summary>
+        public void ClearCell()
+        {
+            gridGameBoardCell.Children.Clear();
+            for (int i = 0; i < shapeHistory.Keys.Count; ++i)
+                for (int j = 0; j < shapeHistory[i].Keys.Count; ++j)
+                    shapeHistory[i][j] = null;
         }
 
         /// <summary>
@@ -224,12 +235,12 @@ The game generate each step of living and you can see new cells emerging, dying,
         private static bool DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, Rectangle>> shapeHistory)
         {
             bool isAlreadyIn = false;
-            if (shapeHistory != null && shapeHistory[i][j] != null)
+            if (shapeHistory != null && i < shapeHistory.Keys.Count && j < shapeHistory[i].Keys.Count && shapeHistory[i][j] != null)
                 isAlreadyIn = shapeHistory[i][j].Fill == color;
 
             if (!isAlreadyIn)
             {
-                if(shapeHistory != null)
+                if (shapeHistory != null && i < shapeHistory.Keys.Count && j < shapeHistory[i].Keys.Count)
                     canvas.Children.Remove(shapeHistory[i][j]);
                 double top = margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height;
                 double left = margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width;
