@@ -58,10 +58,10 @@ namespace Game_Of_Life
             cellMargeLeftRight = 0;
 
             shapeHistory = new Dictionary<int, Dictionary<int, List<UIElement>>>();
-            for (int i = 0; i < GameEngine.NB_COLS_GRID; ++i)
+            for (int i = 0; i < GameEngine.NB_ROWS_GRID; ++i)
             {
                 shapeHistory[i] = new Dictionary<int, List<UIElement>>();
-                for (int j = 0; j < GameEngine.NB_ROWS_GRID; ++j)
+                for (int j = 0; j < GameEngine.NB_COLS_GRID; ++j)
                     shapeHistory[i][j] = new List<UIElement>();
             }
         }
@@ -70,8 +70,9 @@ namespace Game_Of_Life
         {
             cellWidthGameBoard = (gridGameBoard.ActualWidth - GameEngine.NB_COLS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_COLS_GRID - 0.025;
             cellHeightGameBoard = (gridGameBoard.ActualHeight - GameEngine.NB_ROWS_GRID * LINE_STROCK_THICKNESS) / GameEngine.NB_ROWS_GRID - 0.025;
-            cellMargeTopBottom = (gridGameBoard.ActualHeight - (int)GameEngine.NB_ROWS_GRID * (cellHeightGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+
             cellMargeLeftRight = (gridGameBoard.ActualWidth - (int)GameEngine.NB_COLS_GRID * (cellWidthGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+            cellMargeTopBottom = (gridGameBoard.ActualHeight - (int)GameEngine.NB_ROWS_GRID * (cellHeightGameBoard + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
         }
 
         public static Brush BrushFromString(string color)
@@ -79,12 +80,17 @@ namespace Game_Of_Life
             return (Brush)(new System.Windows.Media.BrushConverter()).ConvertFromString(color);
         }
 
+        /// <summary>
+        /// Transform the mouse coordinater in grid coordinate
+        /// </summary>
+        /// <param name="x">Row</param>
+        /// <param name="y">Col</param>
         public void GetCellClickCoordinate(ref double x, ref double y)
         {
-            x -= cellMargeLeftRight;
-            y -= cellMargeTopBottom;
-            x /= (cellWidthGameBoard + LINE_STROCK_THICKNESS);
-            y /= (cellHeightGameBoard + LINE_STROCK_THICKNESS);
+            x -= cellMargeTopBottom;
+            x /= (cellHeightGameBoard + LINE_STROCK_THICKNESS);
+            y -= cellMargeLeftRight;
+            y /= (cellWidthGameBoard + LINE_STROCK_THICKNESS);
         }
 
         public void DrawStatistics(double generation, double currentPopAlive, double currentPopEmerging, double currentPopDying, double currentPopDead, double totPopEmerged, double totPopDead, double totPopDying)
@@ -95,20 +101,21 @@ namespace Game_Of_Life
 
         public void DrawGameBoard()
         {
-            DrawGrid(gridGameBoard, GameEngine.NB_COLS_GRID, GameEngine.NB_ROWS_GRID, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard);
+            DrawGrid(gridGameBoard, GameEngine.NB_ROWS_GRID, GameEngine.NB_COLS_GRID, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard);
         }
 
         public void DrawPattern(PatternRepresentation pattern)
         {
             double nbCols = pattern.Col;
             double nbRows = pattern.Row;
+
             double width = gridPattern.ActualWidth / nbCols - 2;
             double height = gridPattern.ActualHeight / nbRows - 2;
 
-            double margeTopBottom = (gridPattern.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
             double margeLeftRight = (gridPattern.ActualWidth - (int)nbCols * (width + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
-
-            DrawGrid(gridPattern, nbCols, nbRows, margeTopBottom, margeLeftRight, width, height);
+            double margeTopBottom = (gridPattern.ActualHeight - (int)nbRows * (height + LINE_STROCK_THICKNESS) - LINE_STROCK_THICKNESS) / 2.0;
+            
+            DrawGrid(gridPattern, nbRows, nbCols, margeTopBottom, margeLeftRight, width, height);
 
             for (int i = 0; i < pattern.Row; ++i)
                 for (int j = 0; j < pattern.Col; ++j)
@@ -116,20 +123,9 @@ namespace Game_Of_Life
                         DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN);
         }
 
-        private static void DrawGrid(Canvas canvas, double nbCols, double nbRows, double margeTopBottom, double margeLeftRight, double width, double height)
+        private static void DrawGrid(Canvas canvas, double nbRows, double nbCols, double margeTopBottom, double margeLeftRight, double width, double height)
         {
             canvas.Children.Clear();
-            for (int i = 0; i <= (int)nbCols; ++i)
-            {
-                Line line = new Line();
-                line.Stroke = COLOR_UP;
-                line.StrokeThickness = LINE_STROCK_THICKNESS;
-                line.X1 = margeLeftRight + i * width + (i + 1) * LINE_STROCK_THICKNESS;
-                line.X2 = line.X1;
-                line.Y1 = margeTopBottom + LINE_STROCK_THICKNESS; ;
-                line.Y2 = canvas.ActualHeight - margeTopBottom;
-                canvas.Children.Add(line);
-            }
             for (int i = 0; i <= (int)nbRows; ++i)
             {
                 Line line = new Line();
@@ -141,6 +137,17 @@ namespace Game_Of_Life
                 line.Y2 = line.Y1;
                 canvas.Children.Add(line);
             }
+            for (int i = 0; i <= (int)nbCols; ++i)
+            {
+                Line line = new Line();
+                line.Stroke = COLOR_UP;
+                line.StrokeThickness = LINE_STROCK_THICKNESS;
+                line.X1 = margeLeftRight + i * width + (i + 1) * LINE_STROCK_THICKNESS;
+                line.X2 = line.X1;
+                line.Y1 = margeTopBottom + LINE_STROCK_THICKNESS; ;
+                line.Y2 = canvas.ActualHeight - margeTopBottom;
+                canvas.Children.Add(line);
+            }
         }
 
         public void ClearGameBoardCells()
@@ -148,11 +155,29 @@ namespace Game_Of_Life
             gridGameBoardCell.Children.Clear();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i">Row</param>
+        /// <param name="j">Col</param>
+        /// <param name="color"></param>
         public void DrawCellGameBoard(int i, int j, Brush color)
         {
             DrawCell(gridGameBoard, i, j, cellMargeTopBottom, cellMargeLeftRight, cellWidthGameBoard, cellHeightGameBoard, color, shapeHistory);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="i">Row</param>
+        /// <param name="j">Col</param>
+        /// <param name="margeTopBottom"></param>
+        /// <param name="margeLeftRight"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="color"></param>
+        /// <param name="shapeHistory"></param>
         private static void DrawCell(Canvas canvas, int i, int j, double margeTopBottom, double margeLeftRight, double width, double height, Brush color, Dictionary<int, Dictionary<int, List<UIElement>>> shapeHistory = null)
         {
             if(shapeHistory != null)
@@ -162,12 +187,16 @@ namespace Game_Of_Life
             Rectangle rectangle = new Rectangle();
             rectangle.Fill = color;
             rectangle.StrokeThickness = LINE_STROCK_THICKNESS;
+
             rectangle.Width = width;
             rectangle.Height = height;
+            
             double top = margeTopBottom + LINE_STROCK_THICKNESS * (i + 2) + i * height;
             double left = margeLeftRight + LINE_STROCK_THICKNESS * (j + 2) + j * width;
+            
             Canvas.SetTop(rectangle, top);
             Canvas.SetLeft(rectangle, left);
+            
             canvas.Children.Add(rectangle);
             if (shapeHistory != null)
                 shapeHistory[i][j].Add(rectangle);
@@ -187,6 +216,14 @@ namespace Game_Of_Life
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i">Row</param>
+        /// <param name="j">Col</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
         private static double GetFactor(int i, int j, double width, double height)
         {
             return (FACTORS[i, j] == 1 ? width : FACTORS[i, j] == 2 ? height : 0);

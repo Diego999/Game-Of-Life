@@ -22,11 +22,16 @@ namespace Game_Of_Life
     {
         private GameEngine gameEngine;
         private bool isMouseDown;
-   
+        private int lastClickX; //Rows
+        private int lastClickY; //Cols
         public MainWindow()
         {
             InitializeComponent();
+            
             isMouseDown = false;
+            lastClickX = -10;
+            lastClickY = -10;
+
             gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, lblValue1, lblValue2);
 
             pathBtnClean.Fill = DisplayEngine.COLOR_UP;
@@ -80,8 +85,12 @@ namespace Game_Of_Life
 
         private void ClickCell(Point p)
         {
-            if(p.Y < cvsGameBoard.ActualHeight-1 && p.Y > 1 && p.X > 1 && p.X < cvsGameBoard.ActualWidth)
-                gameEngine.ClickCell(p.X, p.Y);
+            if (p.Y < cvsGameBoard.ActualHeight - 1 && p.Y > 1 && p.X > 1 && p.X < cvsGameBoard.ActualWidth && lastClickX != (int)p.Y && lastClickY != (int)p.X)
+            {
+                gameEngine.ClickCell(p.Y, p.X);
+                lastClickY = (int)p.X;
+                lastClickY = (int)p.Y;
+            }
         }
 
         private void cvsGameBoard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

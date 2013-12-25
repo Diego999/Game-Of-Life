@@ -17,7 +17,7 @@ namespace Game_Of_Life
 {
     class GameEngine
     {
-        public const int NB_ROWS_GRID = 80;
+        public const int NB_ROWS_GRID = 10;
         public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
 
         private GameBoard gameBoard1;
@@ -35,9 +35,6 @@ namespace Game_Of_Life
         private int totPopDead;
         private int totPopEmerged;
 
-        private int lastClickX;
-        private int lastClickY;
-
         bool isInPause;
 
         public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, Label lblValue1, Label lblValue2)
@@ -54,9 +51,6 @@ namespace Game_Of_Life
             totPopDying = 0;
             totPopDead = 0;
             totPopEmerged = 0;
-
-            lastClickX = -10;
-            lastClickY = -10;
 
             Init(NB_ROWS_GRID, NB_COLS_GRID);
         }
@@ -118,16 +112,16 @@ namespace Game_Of_Life
             gameBoard2 = temp;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x">Row</param>
+        /// <param name="y">Col</param>
         public void ClickCell(double x, double y)
         {
             displayEngine.GetCellClickCoordinate(ref x, ref y);
-            if (lastClickX != (int)x && lastClickY != (int)y)
-            {   
-                gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
-                displayEngine.DrawCellGameBoard((int)y, (int)x, GameBoard.GetRender(gameBoard1[(int)x, (int)y]));
-            }
-            lastClickX = (int)y;
-            lastClickY = (int)x;
+            gameBoard1[(int)x, (int)y] = GameBoard.State.Alive;
+            displayEngine.DrawCellGameBoard((int)x, (int)y, GameBoard.GetRender(gameBoard1[(int)x, (int)y]));
         }
 
         public void Render()
@@ -137,7 +131,7 @@ namespace Game_Of_Life
             displayEngine.ClearGameBoardCells();
             for (int i = 0; i <= gameBoard1.GetUpperBound(0); ++i)
                 for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
-                    displayEngine.DrawCellGameBoard(j, i, GameBoard.GetRender(gameBoard1[i, j]));
+                    displayEngine.DrawCellGameBoard(i, j, GameBoard.GetRender(gameBoard1[i, j]));
         }
 
         private void Init(int x, int y)

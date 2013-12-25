@@ -19,8 +19,8 @@ namespace Game_Of_Life
         private static readonly Dictionary<State, Brush> STATE_MATCH;
         public enum State { Alive, Emerging, Dying, Empty, Dead };
 
-        private int x;
-        private int y;
+        private int x;//Rows
+        private int y;//Cols
         private State[,] gameBoard;
 
         static GameBoard()
