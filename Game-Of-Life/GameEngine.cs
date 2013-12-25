@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Controls;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace Game_Of_Life
 {
@@ -21,12 +22,14 @@ namespace Game_Of_Life
     /// </summary>
     class GameEngine
     {
-        public const int NB_ROWS_GRID = 60;
-        public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.33);
+        public const int NB_ROWS_GRID = 40;
+        public const int NB_COLS_GRID = (int)(NB_ROWS_GRID * 1.2);
 
         public const int DELAY_MIN = 100;
         public const int DEFAULT_DELAY = 250;
         public const int DELAY_MAX = 5000;
+
+        private const int PROBABILITY_DRAWING_CELL = 2; // 1/x % to create a cell
 
         private GameBoard gameBoard1;
         private GameBoard gameBoard2;
@@ -45,6 +48,8 @@ namespace Game_Of_Life
 
         private Action actionGUI;
 
+        private Task[] tasks;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -56,7 +61,7 @@ namespace Game_Of_Life
         public GameEngine(Canvas gridGameBoard, Canvas gridPattern, Canvas gridGameBoardCell, TextBlock lblValue1)
         {
             displayEngine = new DisplayEngine(gridGameBoard, gridPattern, gridGameBoardCell, lblValue1);
-
+            tasks = new Task[Environment.ProcessorCount];
             actionGUI = new Action(RunWork);
 
             isInPause = true;
@@ -100,6 +105,31 @@ namespace Game_Of_Life
                 ++currentPopAlive;
                 displayEngine.DrawStatistics(stepGeneration, currentPopAlive, currentPopEmerging, currentPopDying, currentPopDead);
             }
+        }
+
+        /// <summary>
+        /// Generate a grid of cells with random values
+        /// </summary>
+        public void GenerateGrid()
+        { 
+            GameBoard.State[] states = new GameBoard.State[] { GameBoard.State.Alive, GameBoard.State.Emerging, GameBoard.State.Dying, GameBoard.State.Dead };
+            Clear();
+
+            for (int t = 0; t < tasks.Length; ++t)
+            {
+                int tt = t; // If we don't copy, t won't be what we think
+                tasks[tt] = Task.Factory.StartNew(() =>
+                    {
+                        Random rand = new Random();
+                        for (int i = gameBoard1.GetUpperBound(0) * tt / tasks.Length; i <= gameBoard1.GetUpperBound(0) * (tt + 1) / tasks.Length; ++i)
+                            for (int j = 0; j <= gameBoard1.GetUpperBound(1); ++j)
+                                if (rand.Next(0, PROBABILITY_DRAWING_CELL) == 0)
+                                    gameBoard1[i, j] = gameBoard2[i, j] = states[rand.Next(states.Length)];
+                    }
+                    );
+            }
+            Task.WaitAll(tasks);
+            Render();
         }
 
         /// <summary>

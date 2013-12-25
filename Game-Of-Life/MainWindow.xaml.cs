@@ -41,6 +41,7 @@ namespace Game_Of_Life
             pathBtnPlay.Fill = DisplayEngine.COLOR_UP;
             pathBtnPause.Fill = DisplayEngine.COLOR_UP;
             pathBtnInfo.Fill = DisplayEngine.COLOR_UP;
+            pathBtnGenerate.Fill = DisplayEngine.COLOR_UP;
 
             btnClear.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnNextGeneration.Background = DisplayEngine.BACKGROUND_GENERAL;
@@ -49,6 +50,7 @@ namespace Game_Of_Life
             btnPlay.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnPause.Background = DisplayEngine.BACKGROUND_GENERAL;
             bntInfo.Background = DisplayEngine.BACKGROUND_GENERAL;
+            btnGenerate.Background = DisplayEngine.BACKGROUND_GENERAL;
             this.Background = DisplayEngine.BACKGROUND_GENERAL;
 
             drawPlayPause(gameEngine.IsInPause);
@@ -76,6 +78,7 @@ namespace Game_Of_Life
             btnNextGeneration.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
             btnSave.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
             btnLoad.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
+            btnGenerate.Visibility = gameEngine.IsInPause ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void initCombobox()
@@ -197,6 +200,11 @@ namespace Game_Of_Life
             pathBtnInfo.Fill = DisplayEngine.COLOR_DOWN;
         }
 
+        private void btnGenerate_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            pathBtnGenerate.Fill = DisplayEngine.COLOR_DOWN;
+        }
+
         #endregion
 
         #region Mainwindow MouseLeftButtonUp
@@ -236,6 +244,12 @@ namespace Game_Of_Life
         private void btnSave_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             pathBtnSave.Fill =  DisplayEngine.COLOR_UP;
+        }
+
+        private void btnGenerate_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            pathBtnGenerate.Fill = DisplayEngine.COLOR_UP;
+            gameEngine.GenerateGrid();
         }
         #endregion
     }
