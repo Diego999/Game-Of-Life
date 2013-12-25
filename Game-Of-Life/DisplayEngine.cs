@@ -26,6 +26,7 @@ namespace Game_Of_Life
         public static readonly Brush BACKGROUND_GENERAL = BrushFromString("#FF111111");
         public static readonly Brush BACKGROUND_GAMEBOARD = BrushFromString("#FF111111");
         public static readonly Brush WARNING = BrushFromString("#55FF0000");
+        public static readonly Brush COLOR_CELL_PATTERN_UP = DisplayEngine.BrushFromString("#77AAAA00");
 
         private static readonly int LINE_STROCK_THICKNESS = 1;
 
@@ -158,7 +159,7 @@ The game generate each step of living and you can see new cells emerging, dying,
             for (int i = 0; i < pattern.Row; ++i)
                 for (int j = 0; j < pattern.Col; ++j)
                     if (pattern[i, j] == PatternRepresentation.ALIVE)
-                        DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_DOWN, null);
+                        DrawCell(gridPattern, i, j, margeTopBottom, margeLeftRight, width, height, COLOR_CELL_PATTERN_UP, null);
         }
 
         /// <summary>
