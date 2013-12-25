@@ -239,11 +239,13 @@ namespace Game_Of_Life
         private void btnLoad_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             pathBtnLoad.Fill =  DisplayEngine.COLOR_UP;
+            gameEngine.Import();
         }
 
         private void btnSave_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             pathBtnSave.Fill =  DisplayEngine.COLOR_UP;
+            gameEngine.Export();
         }
 
         private void btnGenerate_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

@@ -50,6 +50,8 @@ namespace Game_Of_Life
 
         private Task[] tasks;
 
+        private ImportExportUtility importExportUtility;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -69,6 +71,8 @@ namespace Game_Of_Life
 
             gameBoard1 = new GameBoard(NB_ROWS_GRID, NB_COLS_GRID);
             gameBoard2 = new GameBoard(NB_ROWS_GRID, NB_COLS_GRID);
+
+            importExportUtility = new ImportExportUtility();
 
             Init();
         }
@@ -130,6 +134,29 @@ namespace Game_Of_Life
             }
             Task.WaitAll(tasks);
             Render();
+        }
+
+        /// <summary>
+        /// Import a grid from a file
+        /// </summary>
+        public void Import()
+        {
+            int stepGenerationTemp = stepGeneration;
+            if (importExportUtility.Import(ref stepGenerationTemp, ref gameBoard1, ref gameBoard2))
+            {
+                displayEngine.ClearCell();
+                Init();
+                stepGeneration = stepGenerationTemp;
+                Render();
+            }
+        }
+
+        /// <summary>
+        /// Export the current grid to a file
+        /// </summary>
+        public void Export()
+        {
+            importExportUtility.Export(stepGeneration, ref gameBoard1);
         }
 
         /// <summary>

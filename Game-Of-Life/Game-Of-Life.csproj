@@ -67,6 +67,7 @@
     <Compile Include="DisplayEngine.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="GameEngine.cs" />
+    <Compile Include="ImportExportUtility.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

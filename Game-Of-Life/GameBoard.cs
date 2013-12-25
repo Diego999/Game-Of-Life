@@ -22,6 +22,9 @@ namespace Game_Of_Life
         private static readonly Dictionary<State, Brush> STATE_MATCH; // match a State to a Brush
         public enum State { Alive, Emerging, Dying, Empty, Dead };
 
+        public static readonly int MIN_ROWS = 10;
+        public static readonly int MIN_COLS = 10;
+
         private int x; // Rows
         private int y; // Cols
         private State[,] gameBoard;
@@ -43,7 +46,7 @@ namespace Game_Of_Life
         /// <param name="y">Cols</param>
         public GameBoard(int x, int y)
         {
-            if (x < 10 || y < 10)
+            if (x < MIN_ROWS || y < MIN_COLS)
                 throw new Exception("One or more dimensions are smaller than 10");
 
             this.x = x;
