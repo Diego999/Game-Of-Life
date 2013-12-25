@@ -53,6 +53,19 @@ namespace Game_Of_Life
             btnPause.Background = DisplayEngine.BACKGROUND_GENERAL;
             bntInfo.Background = DisplayEngine.BACKGROUND_GENERAL;
             btnGenerate.Background = DisplayEngine.BACKGROUND_GENERAL;
+
+            cvsAlive.Background = GameBoard.GetRender(GameBoard.State.Alive);
+            cvsEmerging.Background = GameBoard.GetRender(GameBoard.State.Emerging);
+            cvsEmpty.Background = GameBoard.GetRender(GameBoard.State.Empty);
+            cvsDying.Background = GameBoard.GetRender(GameBoard.State.Dying);
+            cvsDead.Background = GameBoard.GetRender(GameBoard.State.Dead);
+
+            tbxAlive.Foreground = DisplayEngine.COLOR_UP;
+            tbxEmerging.Foreground = DisplayEngine.COLOR_UP;
+            tbxEmpty.Foreground = DisplayEngine.COLOR_UP;
+            tbxDying.Foreground = DisplayEngine.COLOR_UP;
+            tbxDead.Foreground = DisplayEngine.COLOR_UP;
+
             this.Background = DisplayEngine.BACKGROUND_GENERAL;
 
             drawPlayPause(gameEngine.IsInPause);
@@ -159,6 +172,9 @@ namespace Game_Of_Life
             cbxPattern_SelectionChanged(cbxPattern, null);
             gameEngine.DisplayEngine.ComputeSizeCellGameBoard();
             gameEngine.DisplayEngine.DrawGameBoard();
+            Canvas[] canvas = new Canvas[] { cvsAlive, cvsEmerging, cvsEmpty, cvsDying, cvsDead };
+            for (int i = 0; i < canvas.Length; ++i)
+                DisplayEngine.DrawGridForACell(canvas[i], canvas[i].ActualWidth-2, canvas[i].ActualHeight-2);
         }
 
         private void cbxPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)

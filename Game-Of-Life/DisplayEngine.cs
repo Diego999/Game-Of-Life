@@ -117,6 +117,11 @@ You can interact with the simulation, by pressing the left button of the mouse o
 
         #region DisplayEngine Draw
 
+        public static void DrawGridForACell(Canvas canvas, double width, double height)
+        {
+            DrawGrid(canvas, 1, 1, 0, 0, width, height);
+        }
+
         /// <summary>
         /// Draw the statistics
         /// </summary>

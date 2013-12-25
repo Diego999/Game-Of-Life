@@ -29,7 +29,9 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="350" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="500" />
             </Grid.ColumnDefinitions>
@@ -93,10 +95,35 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 
             <Grid Grid.Column="2" Grid.Row="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="16" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+
+                <Canvas Name="cvsAlive" Grid.Column="0" Grid.Row="0"></Canvas>
+                <TextBlock Name="tbxAlive" TextAlignment="Left" FontWeight="Bold" Margin="10 0 0 0" Grid.Column="1" Grid.Row="0" >Alive</TextBlock>
+                <Canvas Name="cvsEmerging" Grid.Column="0" Grid.Row="1"></Canvas>
+                <TextBlock Name="tbxEmerging" TextAlignment="Left" FontWeight="Bold" Margin="10 0 0 0"  Grid.Column="1" Grid.Row="1" >Emerging</TextBlock>
+                <Canvas Name="cvsEmpty" Grid.Column="0" Grid.Row="2"></Canvas>
+                <TextBlock Name="tbxEmpty" TextAlignment="Left" FontWeight="Bold" Margin="10 0 0 0"  Grid.Column="1" Grid.Row="2" >Empty</TextBlock>
+                <Canvas Name="cvsDying" Grid.Column="0" Grid.Row="3"></Canvas>
+                <TextBlock Name="tbxDying" TextAlignment="Left" FontWeight="Bold" Margin="10 0 0 0"  Grid.Column="1" Grid.Row="3" >Dying</TextBlock>
+                <Canvas Name="cvsDead" Grid.Column="0" Grid.Row="4" ></Canvas>
+                <TextBlock Name="tbxDead" TextAlignment="Left" FontWeight="Bold" Margin="10 0 0 0"  Grid.Column="1" Grid.Row="4" >Dead</TextBlock>
+              </Grid>
+
+            <Grid Grid.Column="4" Grid.Row="0">
+                <Grid.RowDefinitions>
                     <RowDefinition Height="90" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="90" />
                     <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
 
@@ -104,7 +131,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <TextBlock VerticalAlignment="Center" TextAlignment="Left" Name="tbxValue1" Grid.Column="1" Grid.Row="0" FontWeight="Bold" Margin="10 -10 0 0">0<LineBreak/>0<LineBreak/>0<LineBreak/>0<LineBreak/>0</TextBlock>
             </Grid>
 
-            <Grid Grid.Column="4" Grid.Row="0">
+            <Grid Grid.Column="6" Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="90" />
                 </Grid.RowDefinitions>
