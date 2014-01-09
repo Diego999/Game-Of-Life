@@ -33,7 +33,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="500" />
+                <ColumnDefinition Width="*" Name="widthPatternCol"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Grid.Row="0">

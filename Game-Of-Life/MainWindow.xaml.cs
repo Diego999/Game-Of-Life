@@ -13,6 +13,7 @@ namespace Game_Of_Life
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly static int MIN_WIDTH_PATTERN_COL = 444;
         private GameEngine gameEngine;
         private bool isMouseDownLeft;
         private bool isMouseDownRight;
@@ -31,6 +32,7 @@ namespace Game_Of_Life
             lastClickX = -10;
             lastClickY = -10;
 
+            widthPatternCol.MinWidth = MIN_WIDTH_PATTERN_COL;
             gameEngine = new GameEngine(cvsGameBoard, cvsPattern, cvsGameBoardCell, tbxValue1);
 
             pathBtnClear.Fill = DisplayEngine.COLOR_UP;
